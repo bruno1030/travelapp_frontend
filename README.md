@@ -2,6 +2,28 @@
 
 A new Flutter project.
 
+## ##############################
+
+Command to run the application:
+
+flutter run
+
+## ##############################
+
+Comand to run directly in Google Chrome:
+
+flutter run -d chrome
+
+## ##############################
+
+Hot Reload in local environment:
+
+Hot Reload (r ou Ctrl/Cmd + r): for small changes on widgets and
+
+Hot Restart (Shift + r): For more deep changes, like modifications on global variables or on state management
+
+## ##############################
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
