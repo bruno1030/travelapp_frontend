@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/models/city.dart';
+import 'package:travelapp_frontend/screens/city_photos_screen.dart';  // Import necessário para a navegação
 
 class CitySearchDelegate extends SearchDelegate<City?> {
   final List<City> cities;
@@ -42,7 +43,18 @@ class CitySearchDelegate extends SearchDelegate<City?> {
         return ListTile(
           title: Text(city.name),
           onTap: () {
-            close(context, city); // Retorna a cidade selecionada
+            close(context, city); // Fecha a pesquisa e retorna a cidade selecionada
+
+            // Navega para a tela de fotos da cidade, passando cityId e city.name
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CityPhotosScreen(
+                  cityId: city.id,
+                  cityName: city.name,  // Passando o nome da cidade
+                ),
+              ),
+            );
           },
         );
       },
