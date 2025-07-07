@@ -5,6 +5,7 @@ import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
 import 'package:travelapp_frontend/delegates/city_search_delegate.dart';
+import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Nova importação
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -86,9 +87,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: cities.length,
                       itemBuilder: (context, index) {
                         final city = cities[index];
-                        return CityCard(
-                          imageUrl: city.coverPhotoUrl,
-                          cityName: city.name,
+                        return GestureDetector(
+                          onTap: () {
+                            // Navega para a tela de CityPhotosScreen passando o city_id
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CityPhotosScreen(cityId: city.id, cityName: city.name),
+                              ),
+                            );
+                          },
+                          child: CityCard(
+                            imageUrl: city.coverPhotoUrl,
+                            cityName: city.name,
+                          ),
                         );
                       },
                     ),
