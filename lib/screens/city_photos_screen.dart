@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:travelapp_frontend/services/api_service.dart'; 
-import 'package:travelapp_frontend/widgets/photo_card.dart'; 
-import 'package:travelapp_frontend/models/photo.dart'; 
-import 'package:travelapp_frontend/widgets/custom_app_bar.dart'; // Importando CustomAppBar
-import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart'; // Importando CustomBottomBar
+import 'package:travelapp_frontend/services/api_service.dart';
+import 'package:travelapp_frontend/widgets/photo_card.dart';
+import 'package:travelapp_frontend/models/photo.dart';
+import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
+import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 
 class CityPhotosScreen extends StatefulWidget {
   final int cityId;
-  final String cityName; // Adicionando o nome da cidade
+  final String cityName;
 
-  CityPhotosScreen({required this.cityId, required this.cityName}); // Recebendo o nome da cidade
+  CityPhotosScreen({required this.cityId, required this.cityName});
 
   @override
   _CityPhotosScreenState createState() => _CityPhotosScreenState();
@@ -38,17 +38,17 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'City Photos'), // Usando CustomAppBar
-      bottomNavigationBar: CustomBottomBar(), // Usando CustomBottomBar
+      appBar: CustomAppBar(title: 'City Photos'),
+      bottomNavigationBar: CustomBottomBar(),
       body: Container(
-        color: Color(0xFF262626), // Definindo a cor de fundo igual à HomeScreen
+        color: Color(0xFF262626),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                widget.cityName, // Exibindo o nome da cidade
+                widget.cityName,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -70,9 +70,7 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
                       itemCount: photos.length,
                       itemBuilder: (context, index) {
                         final photo = photos[index];
-                        return PhotoCard(
-                          imageUrl: photo.imageUrl,
-                        );
+                        return PhotoCard(imageUrl: photo.imageUrl);
                       },
                     ),
             ),

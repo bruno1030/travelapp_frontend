@@ -4,8 +4,8 @@ import 'package:travelapp_frontend/widgets/city_card.dart';
 import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
-import 'package:travelapp_frontend/delegates/city_search_delegate.dart';
-import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Nova importação
+import 'package:travelapp_frontend/screens/city_search_screen.dart';  // Importando a nova tela de pesquisa
+import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Importando CityPhotosScreen
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -45,9 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(12),
               child: InkWell(
                 onTap: () {
-                  showSearch(
-                    context: context,
-                    delegate: CitySearchDelegate(cities),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CitySearchScreen(cities),  // Navegando para a tela de pesquisa
+                    ),
                   );
                 },
                 child: Container(
@@ -89,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         final city = cities[index];
                         return GestureDetector(
                           onTap: () {
-                            // Navega para a tela de CityPhotosScreen passando o city_id
                             Navigator.push(
                               context,
                               MaterialPageRoute(
