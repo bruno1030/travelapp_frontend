@@ -45,7 +45,7 @@ class CitySearchDelegate extends SearchDelegate<City?> {
           onTap: () {
             close(context, city); // Fecha a pesquisa e retorna a cidade selecionada
 
-            // Navega para a tela de fotos da cidade, passando cityId e city.name
+            // Navega para a tela de fotos da cidade, substituindo a tela de pesquisa
             Navigator.push(
               context,
               MaterialPageRoute(
