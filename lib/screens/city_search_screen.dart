@@ -21,7 +21,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
     super.initState();
     _controller = TextEditingController();
     suggestions = [];
-    _filterCities(''); // Mostra todas as cidades inicialmente
+    _filterCities('');
   }
 
   void _filterCities(String query) {
@@ -48,7 +48,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: ''),
       body: Container(
-        color: Color(0xFF262626), // 🔥 BACKGROUND ESCURO ADICIONADO
+        color: const Color(0xFF262626),
         child: Column(
           children: [
             Padding(
@@ -57,15 +57,19 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                 controller: _controller,
                 onChanged: _filterCities,
                 decoration: InputDecoration(
-                  hintText: 'Search for a city...',
+                  hintText: 'Search a city...',
+                  hintStyle: TextStyle(
+                    color: Colors.white.withOpacity(0.1),
+                    fontSize: 16,
+                  ),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
             Expanded(
@@ -76,7 +80,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                   return ListTile(
                     title: Text(
                       city.name,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     onTap: () async {
                       await Navigator.push(
