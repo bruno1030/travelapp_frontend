@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/services/api_service.dart';
 import 'package:travelapp_frontend/widgets/city_card.dart';
-import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
+import 'package:travelapp_frontend/widgets/home_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
 import 'package:travelapp_frontend/screens/city_search_screen.dart';  // Importando a nova tela de pesquisa
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'ClickHunt'),
+      appBar: HomeAppBar(),
       bottomNavigationBar: CustomBottomBar(),
       body: Container(
         color: Color(0xFF262626),
