@@ -38,6 +38,8 @@ dependencies:
   http: ^0.13.4   # Para fazer requisições HTTP
   cached_network_image: ^3.2.0  # Para cache de imagens
 
+  url_launcher: ^6.2.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
