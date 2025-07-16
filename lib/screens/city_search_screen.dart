@@ -88,7 +88,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                         MaterialPageRoute(
                           builder: (context) => CityPhotosScreen(
                             cityId: city.id,
-                            cityName: city.name,
+                            cityName: city.name
                           ),
                         ),
                       );
