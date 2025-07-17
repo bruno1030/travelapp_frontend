@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travelapp_frontend/screens/home_screen.dart'; // Certifique-se de importar corretamente sua Home
 
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar({super.key});
@@ -8,24 +9,20 @@ class CustomBottomBar extends StatelessWidget {
     return BottomAppBar(
       color: const Color(0xFF020202),
       child: SizedBox(
-        height: 50, // Altura total da barra (reduzida)
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _BottomBarItem(
               icon: Icons.home,
               label: 'Home',
-              onTap: () {},
-            ),
-            _BottomBarItem(
-              icon: Icons.photo_camera,
-              label: 'Send photo',
-              onTap: () {},
-            ),
-            _BottomBarItem(
-              icon: Icons.person,
-              label: 'Profile',
-              onTap: () {},
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  (route) => false, // Remove todas as rotas anteriores
+                );
+              },
             ),
           ],
         ),
@@ -57,15 +54,15 @@ class _BottomBarItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Color(0xFFFE1F80),
-            size: 30, // Ícone maior
+            color: const Color(0xFFFE1F80),
+            size: 30,
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFFF9FAFB),
-              fontSize: 15.0, // Texto maior
+              fontSize: 15.0,
               fontWeight: FontWeight.w500,
             ),
           ),

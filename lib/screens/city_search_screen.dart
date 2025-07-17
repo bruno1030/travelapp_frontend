@@ -59,7 +59,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                 decoration: InputDecoration(
                   hintText: 'Search a city...',
                   hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withOpacity(0.4),
                     fontSize: 16,
                   ),
                   filled: true,
