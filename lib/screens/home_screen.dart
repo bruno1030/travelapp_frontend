@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HomeAppBar(),
-      bottomNavigationBar: CustomBottomBar(),
       body: Container(
         color: Color(0xFF262626),
         child: Column(

@@ -68,8 +68,7 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
                           builder: (context) => PhotoDetailScreen(
                             imageUrl: photo.imageUrl,
                             latitude: photo.latitude,
-                            longitude: photo.longitude,
-                            cityName: widget.cityName
+                            longitude: photo.longitude
                           ),
                         ),
                       );

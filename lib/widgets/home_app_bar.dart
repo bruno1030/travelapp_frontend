@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travelapp_frontend/widgets/menu_button.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -6,9 +7,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Color(0xFF020202),
-      toolbarHeight: 80, // custom height
-      automaticallyImplyLeading: false, // Remove the standard back button
+      backgroundColor: const Color(0xFF020202),
+      toolbarHeight: 80,
+      automaticallyImplyLeading: false,
       title: Row(
         children: [
           Image.asset(
@@ -16,8 +17,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: 50,
             width: 50,
           ),
-          SizedBox(width: 8),
-          Text(
+          const SizedBox(width: 8),
+          const Text(
             'ClickHunt',
             style: TextStyle(
               color: Color(0xFFFE1F80),
@@ -27,17 +28,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            // TODO: action to be implemented for the menu
-          },
-        ),
+      actions: const [
+        MenuButton(),
       ],
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(80);
 }

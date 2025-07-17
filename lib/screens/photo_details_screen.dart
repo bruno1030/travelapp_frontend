@@ -5,65 +5,84 @@ class PhotoDetailScreen extends StatelessWidget {
   final String imageUrl;
   final double latitude;
   final double longitude;
-  final String cityName;
 
   const PhotoDetailScreen({
     super.key,
     required this.imageUrl,
     required this.latitude,
     required this.longitude,
-    required this.cityName
   });
 
   void _launchMaps() async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not open the map.';
+      throw 'Could not launch Maps';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF262626),
-      appBar: AppBar(
-        backgroundColor: Color(0xFF020202),
-        title: Text(
-          cityName,
-          style: TextStyle(
-            color: Color(0xFFFE1F80),
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-          ),
-        ),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Column(
+      backgroundColor: Colors.black, // fundo neutro pra destacar a foto
+      body: Stack(
         children: [
-          Expanded(
-            child: Center(
-              child: Image.network(imageUrl),
+          // A imagem ocupando toda a tela
+          Positioned.fill(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFE1F80),
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+
+          // Botão de voltar no canto superior esquerdo
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.black.withOpacity(0.5),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                 ),
               ),
-              onPressed: _launchMaps,
-              child: Text(
-                'Take me there!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+            ),
+          ),
+
+          // Botão "Take me there!" fixo na parte inferior
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+              padding: const EdgeInsets.all(16.0),
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFE1F80),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: _launchMaps,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.location_pin, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'Take me there!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
