@@ -18,9 +18,15 @@ flutter run -d chrome
 
 Comands to run directly in iPhone emulator:
 
+On macOs search, search for Simulator
+
+Open it
+
+Go to VSCode
+
 flutter devices
 
-flutter run -d < ID of the device >
+flutter run -d < ID of the iphone device >
 
 ## ##############################
 
@@ -55,10 +61,8 @@ Then run:
 
 flutter run -d < id_of_android_device >
 
-Examples: 
-flutter run -d emulator-5554 (for pixel 7)
-or
-flutter run -d emulator-5556 (for pixel 4)
+Example: 
+flutter run -d emulator-5554
 
 ## ##############################
 
