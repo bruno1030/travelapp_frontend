@@ -43,3 +43,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+config.dart
+
+# Ignorar arquivos do Xcode
+ios/Runner.xcodeproj/project.pbxproj
+ios/Runner.xcworkspace/
+ios/Pods/
+
+# Ignorar o arquivo Podfile.lock (não versionado para evitar problemas com dependências)
+ios/Podfile.lock
