@@ -13,7 +13,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           Image.asset(
-            'logo_FE1F80.png',
+            'assets/logo_FE1F80.png',
             height: 50,
             width: 50,
           ),

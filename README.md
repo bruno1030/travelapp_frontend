@@ -16,6 +16,52 @@ flutter run -d chrome
 
 ## ##############################
 
+Comands to run directly in iPhone emulator:
+
+flutter devices
+
+flutter run -d < ID of the device >
+
+## ##############################
+
+How to run directly in Android emulator:
+
+Open Android Studio
+
+"Tools” > “Device Manager”.
+
+“Create Device”.
+
+Choose an device option (Pixel 7 for example)
+
+Download system image (usually its the latest Android version).
+If it's already downloaded, no need to download again, only in case its necessary to download the image of another device.
+
+Start the emulator via Android Studio
+
+After the emulator is open:
+
+- go to VS code
+- open the terminal
+- run "flutter devices"
+
+It must show:
+
+Chrome (web)
+iPhone 15 Simulator
+Pixel_6_API_34 (android)
+
+Then run:
+
+flutter run -d < id_of_android_device >
+
+Examples: 
+flutter run -d emulator-5554 (for pixel 7)
+or
+flutter run -d emulator-5556 (for pixel 4)
+
+## ##############################
+
 Hot Reload in local environment:
 
 Hot Reload (r ou Ctrl/Cmd + r): for small changes on widgets and
