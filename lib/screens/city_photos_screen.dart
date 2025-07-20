@@ -9,11 +9,13 @@ import 'package:travelapp_frontend/screens/photo_details_screen.dart';
 class CityPhotosScreen extends StatefulWidget {
   final int cityId;
   final String cityName;
+  final Function(Locale) onLocaleChange; 
 
   const CityPhotosScreen({
     super.key,
     required this.cityId,
     required this.cityName,
+    required this.onLocaleChange, // Passando a função para o construtor
   });
 
   @override
@@ -43,8 +45,8 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.cityName),
-      bottomNavigationBar: CustomBottomBar(),
+      appBar: CustomAppBar(title: widget.cityName, onLocaleChange: widget.onLocaleChange), // Passando o onLocaleChange para o CustomAppBar
+      bottomNavigationBar: CustomBottomBar(onLocaleChange: widget.onLocaleChange), // Passando o onLocaleChange para o CustomBottomBar
       body: Container(
         color: const Color(0xFF262626),
         child: photos.isEmpty
@@ -68,7 +70,8 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
                           builder: (context) => PhotoDetailScreen(
                             imageUrl: photo.imageUrl,
                             latitude: photo.latitude,
-                            longitude: photo.longitude
+                            longitude: photo.longitude,
+                            onLocaleChange: widget.onLocaleChange,
                           ),
                         ),
                       );

@@ -53,3 +53,7 @@ ios/Pods/
 
 # Ignorar o arquivo Podfile.lock (não versionado para evitar problemas com dependências)
 ios/Podfile.lock
+
+# Arquivos de ícones gerados para Android e iOS
+android/app/src/main/res/mipmap-*/ic_launcher.png
+ios/Runner/Assets.xcassets/AppIcon.appiconset/*

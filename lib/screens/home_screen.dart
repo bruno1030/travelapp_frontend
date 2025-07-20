@@ -4,10 +4,14 @@ import 'package:travelapp_frontend/widgets/city_card.dart';
 import 'package:travelapp_frontend/widgets/home_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
-import 'package:travelapp_frontend/screens/city_search_screen.dart';  // Importando a nova tela de pesquisa
+import 'package:travelapp_frontend/screens/city_search_screen.dart'; // Importando a nova tela de pesquisa
 import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Importando CityPhotosScreen
 
 class HomeScreen extends StatefulWidget {
+  final Function(Locale) onLocaleChange; // Novo parâmetro
+
+  const HomeScreen({super.key, required this.onLocaleChange});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -35,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: HomeAppBar(),
+      appBar: HomeAppBar(onLocaleChange: widget.onLocaleChange), // Passando o onLocaleChange para o HomeAppBar
       body: Container(
         color: Color(0xFF262626),
         child: Column(
@@ -47,7 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CitySearchScreen(cities),  // Navegando para a tela de pesquisa
+                      builder: (context) => CitySearchScreen(
+                        cities: cities,
+                        onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
+                      ),
                     ),
                   );
                 },
@@ -93,7 +100,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CityPhotosScreen(cityId: city.id, cityName: city.name),
+                                builder: (context) => CityPhotosScreen(
+                                  cityId: city.id, 
+                                  cityName: city.name,
+                                  onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
+                                ),
                               ),
                             );
                           },

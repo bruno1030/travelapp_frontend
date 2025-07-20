@@ -5,8 +5,9 @@ import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 
 class CitySearchScreen extends StatefulWidget {
   final List<City> cities;
+  final Function(Locale) onLocaleChange;
 
-  CitySearchScreen(this.cities);
+  CitySearchScreen({super.key, required this.cities, required this.onLocaleChange});
 
   @override
   _CitySearchScreenState createState() => _CitySearchScreenState();
@@ -46,7 +47,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: ''),
+      appBar: CustomAppBar(title: '', onLocaleChange: widget.onLocaleChange), // Passando o onLocaleChange para o CustomAppBar
       body: Container(
         color: const Color(0xFF262626),
         child: Column(
@@ -88,7 +89,8 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                         MaterialPageRoute(
                           builder: (context) => CityPhotosScreen(
                             cityId: city.id,
-                            cityName: city.name
+                            cityName: city.name,
+                            onLocaleChange: widget.onLocaleChange, // Passando a função onLocaleChange
                           ),
                         ),
                       );

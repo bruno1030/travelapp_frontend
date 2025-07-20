@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/widgets/menu_button.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key});
+  final Function(Locale) onLocaleChange; // Adicionando o parâmetro onLocaleChange
+
+  const HomeAppBar({
+    super.key,
+    required this.onLocaleChange, // Passando o parâmetro no construtor
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +33,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: const [
-        MenuButton(),
+      actions: [
+        MenuButton(onLocaleChange: onLocaleChange), // Passando o onLocaleChange para o MenuButton
       ],
     );
   }
