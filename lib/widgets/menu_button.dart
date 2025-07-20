@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MenuButton extends StatelessWidget {
-  const MenuButton({super.key});
+  final Function(Locale) onLocaleChange; // Recebendo a função para mudar o idioma
+
+  const MenuButton({super.key, required this.onLocaleChange});
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +42,91 @@ class MenuButton extends StatelessWidget {
             ),
           );
         }
+        // Aqui, você pode adicionar lógica para mudar o idioma
+        if (value == 'change_language') {
+          _showLanguageDialog(context);
+        }
       },
       itemBuilder: (BuildContext context) => [
+        PopupMenuItem<String>(
+          value: 'language',
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/flags/${_getFlagForLocale(Locale('pt', 'BR'))}'),
+              ),
+              const SizedBox(width: 8),
+              Text(_getLanguageNameForLocale(Locale('pt', 'BR'))),
+            ],
+          ),
+        ),
         const PopupMenuItem<String>(
           value: 'about',
           child: Text('About us'),
         ),
       ],
     );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _languageOption(context, Locale('pt', 'BR'), 'Portuguese'),
+            _languageOption(context, Locale('en', 'US'), 'English'),
+            _languageOption(context, Locale('ja', 'JP'), 'Japanese'),
+            _languageOption(context, Locale('zh', 'CN'), 'Mandarin'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _languageOption(BuildContext context, Locale locale, String language) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: AssetImage('assets/flags/${_getFlagForLocale(locale)}'),
+      ),
+      title: Text(language),
+      onTap: () {
+        onLocaleChange(locale);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  String _getFlagForLocale(Locale locale) {
+    switch (locale.languageCode) {
+      case 'en':
+        return 'us.png'; // Caminho da bandeira dos EUA
+      case 'pt':
+        return 'br.png'; // Caminho da bandeira do Brasil
+      case 'ja':
+        return 'jp.png'; // Caminho da bandeira do Japão
+      case 'zh':
+        return 'cn.png'; // Caminho da bandeira da China
+      default:
+        return 'us.png';
+    }
+  }
+
+  String _getLanguageNameForLocale(Locale locale) {
+    switch (locale.languageCode) {
+      case 'en':
+        return 'English';
+      case 'pt':
+        return 'Portuguese';
+      case 'ja':
+        return 'Japanese';
+      case 'zh':
+        return 'Mandarin';
+      default:
+        return 'English';
+    }
   }
 }

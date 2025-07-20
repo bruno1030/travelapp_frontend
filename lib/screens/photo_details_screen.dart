@@ -5,12 +5,14 @@ class PhotoDetailScreen extends StatelessWidget {
   final String imageUrl;
   final double latitude;
   final double longitude;
+  final Function(Locale) onLocaleChange; // Novo parâmetro
 
   const PhotoDetailScreen({
     super.key,
     required this.imageUrl,
     required this.latitude,
     required this.longitude,
+    required this.onLocaleChange, // Adicionado ao construtor
   });
 
   void _launchMaps() async {
@@ -25,18 +27,15 @@ class PhotoDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // fundo neutro pra destacar a foto
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // A imagem ocupando toda a tela
           Positioned.fill(
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
             ),
           ),
-
-          // Botão de voltar no canto superior esquerdo
           SafeArea(
             child: Align(
               alignment: Alignment.topLeft,
@@ -52,8 +51,6 @@ class PhotoDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Botão "Take me there!" fixo na parte inferior
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

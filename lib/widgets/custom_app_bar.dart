@@ -4,11 +4,13 @@ import 'package:travelapp_frontend/widgets/menu_button.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
+  final Function(Locale) onLocaleChange; // Adicionando o parâmetro onLocaleChange
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.leading,
+    required this.onLocaleChange, // Passando o parâmetro no construtor
   });
 
   @override
@@ -45,8 +47,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           );
         },
       ),
-      actions: const [
-        MenuButton(),
+      actions: [
+        MenuButton(onLocaleChange: onLocaleChange), // Passando o onLocaleChange para o MenuButton
       ],
     );
   }

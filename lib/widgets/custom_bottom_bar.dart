@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/screens/home_screen.dart'; // Certifique-se de importar corretamente sua Home
 
 class CustomBottomBar extends StatelessWidget {
-  const CustomBottomBar({super.key});
+  final Function(Locale) onLocaleChange; // Adicionando o parâmetro no construtor
+
+  const CustomBottomBar({super.key, required this.onLocaleChange}); // Adicionando required
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class CustomBottomBar extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => HomeScreen(onLocaleChange: onLocaleChange)), // Passando o parâmetro onLocaleChange
                   (route) => false, // Remove todas as rotas anteriores
                 );
               },
