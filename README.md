@@ -74,6 +74,43 @@ Hot Restart (Shift + r): For more deep changes, like modifications on global var
 
 ## ##############################
 
+How to add new translated messages (for internationalization):
+
+- maintain the folder lib/generated, but remove all the files inside it:
+... app_localizations_en.dart
+... app_localizations_ja.dart
+... app_localizations_pt.dart
+... app_localizations_zh.dart
+... app_localizations.dart
+
+
+- add the new messages to all languages files:
+... app_en.arb
+... app_ja.arb
+... app_pt.arb
+... app_zh.arb
+
+- run "flutter gen-l10n"
+
+- ensure that the files were generated again in lib/generated folder:
+... app_localizations_en.dart
+... app_localizations_ja.dart
+... app_localizations_pt.dart
+... app_localizations_zh.dart
+... app_localizations.dart
+
+- apply the internalization on the required field using the same kind of implementation that is done for other fields, using AppLocations.of, for exemple what us done for the "about us" field:
+
+String aboutUs = AppLocalizations.of(context)?.about_us ?? 'About us..';
+PopupMenuItem<String>(
+          value: 'about',
+          child: Text(aboutUs),
+        ),
+
+In the exemplo above, the value after ?? is the fallback.
+
+## ##############################
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
