@@ -6,13 +6,11 @@ import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 class CitySearchScreen extends StatefulWidget {
   final List<City> cities;
   final Function(Locale) onLocaleChange;
-  final Locale currentLocale;
 
   CitySearchScreen({
     super.key,
     required this.cities,
     required this.onLocaleChange,
-    required this.currentLocale,
   });
 
   @override
@@ -55,8 +53,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Search Cities', 
-        onLocaleChange: widget.onLocaleChange, 
-        currentLocale: widget.currentLocale,  // Passando o currentLocale para o CustomAppBar
+        onLocaleChange: widget.onLocaleChange,
       ),
       body: Container(
         color: const Color(0xFF262626),
@@ -101,7 +98,6 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                             cityId: city.id,
                             cityName: city.name,
                             onLocaleChange: widget.onLocaleChange,
-                            currentLocale: widget.currentLocale,  // Passando o currentLocale
                           ),
                         ),
                       );

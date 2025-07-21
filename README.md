@@ -111,6 +111,12 @@ In the exemplo above, the value after ?? is the fallback.
 
 ## ##############################
 
+Command to execute after adding new dependencies to pubspec.yaml:
+
+flutter pub get
+
+## ##############################
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

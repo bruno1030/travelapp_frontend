@@ -6,14 +6,12 @@ import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
 import 'package:travelapp_frontend/screens/city_search_screen.dart'; // Importando a nova tela de pesquisa
 import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Importando CityPhotosScreen
-import 'package:flutter_localizations/flutter_localizations.dart'; // Adicionando suporte a localizações
 import 'package:travelapp_frontend/generated/app_localizations.dart'; // Adicionando o arquivo de localizações
+import 'package:travelapp_frontend/controllers/locale_controller.dart'; // Importando LocaleController
+import 'package:provider/provider.dart'; // Para usar o provider
 
 class HomeScreen extends StatefulWidget {
-  final Function(Locale) onLocaleChange; // Novo parâmetro
-  final Locale currentLocale; // Recebendo o currentLocale
-
-  const HomeScreen({super.key, required this.onLocaleChange, required this.currentLocale});
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -39,23 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchCities();
   }
 
-  // Função que será chamada ao mudar o idioma
-  void _changeLocale(Locale locale) {
-    widget.onLocaleChange(locale); // Alterando a linguagem através da função passada
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Pegando o texto traduzido para "Search a city"
+    final localeController = Provider.of<LocaleController>(context);
+    Locale currentLocale = localeController.locale;  // Pegando o idioma atual diretamente do controller
+
     String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city..';
 
     return Scaffold(
       appBar: HomeAppBar(
-        onLocaleChange: _changeLocale, // Passando a função que altera o locale
-        currentLocale: widget.currentLocale, // Passando o currentLocale para o AppBar
+        onLocaleChange: localeController.setLocale, // Passando a função que altera o locale
       ),
       body: Container(
-        color: Color(0xFF262626),
+        color: const Color(0xFF262626),
         child: Column(
           children: [
             Padding(
@@ -67,14 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                       builder: (context) => CitySearchScreen(
                         cities: cities,
-                        onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
-                        currentLocale: widget.currentLocale, // Passando o currentLocale
+                        onLocaleChange: localeController.setLocale,
                       ),
                     ),
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -90,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Icon(Icons.search, color: Colors.white),
+                      const Icon(Icons.search, color: Colors.white),
                     ],
                   ),
                 ),
@@ -98,10 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: cities.isEmpty
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : GridView.builder(
-                      padding: EdgeInsets.all(8),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      padding: const EdgeInsets.all(8),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
@@ -116,10 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CityPhotosScreen(
-                                  cityId: city.id, 
+                                  cityId: city.id,
                                   cityName: city.name,
-                                  onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
-                                  currentLocale: widget.currentLocale, // Passando o currentLocale
+                                  onLocaleChange: localeController.setLocale,
                                 ),
                               ),
                             );
@@ -135,10 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomBar(
-        onLocaleChange: widget.onLocaleChange,
-        currentLocale: widget.currentLocale, // Passando currentLocale para o CustomBottomBar
-      ),
+      bottomNavigationBar: CustomBottomBar(),
     );
   }
 }

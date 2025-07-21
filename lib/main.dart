@@ -19,12 +19,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Aqui, acessamos o LocaleController diretamente no build
     final localeController = Provider.of<LocaleController>(context);
 
     return MaterialApp(
       title: 'ClickHunt',
       theme: ThemeData(primarySwatch: Colors.blue),
-      locale: localeController.locale,
+      locale: localeController.locale,  // Usando o idioma globalmente
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -38,8 +39,8 @@ class MyApp extends StatelessWidget {
         Locale('zh', 'CN'),
       ],
       home: HomeScreen(
-        onLocaleChange: localeController.setLocale,
-        currentLocale: localeController.locale,
+        // Agora não precisamos mais passar currentLocale ou onLocaleChange
+        // A mudança de idioma é tratada pelo LocaleController diretamente
       ),
     );
   }
