@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:travelapp_frontend/screens/home_screen.dart'; // Certifique-se de importar corretamente sua Home
-import 'package:flutter/material.dart';
+import 'package:travelapp_frontend/screens/home_screen.dart';
+import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:provider/provider.dart';
 
 class CustomBottomBar extends StatelessWidget {
-  final Function(Locale) onLocaleChange; // Função para mudar o idioma
-  final Locale currentLocale; // Novo parâmetro para o idioma atual
-
-  const CustomBottomBar({
-    super.key, 
-    required this.onLocaleChange,
-    required this.currentLocale, // Passando o currentLocale
-  });
+  const CustomBottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Pegando o idioma diretamente do LocaleController
+    final localeController = Provider.of<LocaleController>(context);
+
     return BottomAppBar(
       color: const Color(0xFF020202),
       child: SizedBox(
@@ -25,12 +22,12 @@ class CustomBottomBar extends StatelessWidget {
               icon: Icons.home,
               label: 'Home', // Aqui você pode adicionar lógica para mudar o label baseado no currentLocale
               onTap: () {
+                // Agora não é mais necessário passar o idioma manualmente
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen(
-                    onLocaleChange: onLocaleChange, 
-                    currentLocale: currentLocale, // Passando o currentLocale para a Home
-                  )),
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
                   (route) => false, // Remove todas as rotas anteriores
                 );
               },

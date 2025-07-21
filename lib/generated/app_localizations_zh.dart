@@ -22,4 +22,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get search_city => '搜索城市...';
+
+  @override
+  String get language_name => '中文';
 }

@@ -10,14 +10,12 @@ class CityPhotosScreen extends StatefulWidget {
   final int cityId;
   final String cityName;
   final Function(Locale) onLocaleChange;
-  final Locale currentLocale;
 
   const CityPhotosScreen({
     super.key,
     required this.cityId,
     required this.cityName,
     required this.onLocaleChange,
-    required this.currentLocale,
   });
 
   @override
@@ -49,13 +47,9 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: widget.cityName, 
-        onLocaleChange: widget.onLocaleChange, 
-        currentLocale: widget.currentLocale,  // Passando o currentLocale para o CustomAppBar
+        onLocaleChange: widget.onLocaleChange,
       ),
-      bottomNavigationBar: CustomBottomBar(
-        onLocaleChange: widget.onLocaleChange, 
-        currentLocale: widget.currentLocale,  // Passando o currentLocale para o CustomBottomBar
-      ),
+      bottomNavigationBar: CustomBottomBar(),
       body: Container(
         color: const Color(0xFF262626),
         child: photos.isEmpty

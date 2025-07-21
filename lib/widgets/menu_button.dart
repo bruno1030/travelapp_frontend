@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // Adicionando suporte a localizações
-import 'package:travelapp_frontend/generated/app_localizations.dart'; // Adicionando o arquivo de localizações
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class MenuButton extends StatelessWidget {
   final Function(Locale) onLocaleChange;
@@ -14,8 +13,9 @@ class MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-  String aboutUs = AppLocalizations.of(context)?.about_us ?? 'About us..';
+    final aboutUs = AppLocalizations.of(context)?.about_us ?? 'About us';
+    final languageLabel = _getLanguageNativeName(currentLocale);
+    final flagPath = _getFlagForLocale(currentLocale);
 
     return PopupMenuButton<String>(
       icon: const Icon(Icons.menu, color: Colors.white),
@@ -56,17 +56,16 @@ class MenuButton extends StatelessWidget {
           _showLanguageDialog(context);
         }
       },
-      itemBuilder: (BuildContext context) => [
+      itemBuilder: (context) => [
         PopupMenuItem<String>(
           value: 'change_language',
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage:
-                    AssetImage('assets/flags/${_getFlagForLocale(currentLocale)}'),
+                backgroundImage: AssetImage('assets/flags/$flagPath'),
               ),
               const SizedBox(width: 8),
-              Text(_getLanguageNativeName(currentLocale)),
+              Text(languageLabel),
             ],
           ),
         ),
@@ -82,10 +81,9 @@ class MenuButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Language'),
+        title: Text(AppLocalizations.of(context)?.language ?? 'Language'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _languageOption(context, const Locale('pt', 'BR')),
             _languageOption(context, const Locale('en', 'US')),
@@ -104,8 +102,8 @@ class MenuButton extends StatelessWidget {
       ),
       title: Text(_getLanguageNativeName(locale)),
       onTap: () {
-        onLocaleChange(locale);
-        Navigator.pop(context);
+        Navigator.of(context).pop(); // Fecha o dialogo
+        onLocaleChange(locale); // Troca o idioma
       },
     );
   }

@@ -1,49 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
-import 'generated/app_localizations.dart'; // Importando o arquivo gerado
+import 'generated/app_localizations.dart';
+import 'controllers/locale_controller.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => LocaleController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  Locale _locale = Locale('en', 'US'); // default language
-
-  void _setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Aqui, acessamos o LocaleController diretamente no build
+    final localeController = Provider.of<LocaleController>(context);
+
     return MaterialApp(
       title: 'ClickHunt',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      locale: _locale, // Aplica a mudança de idioma
-      localizationsDelegates: [
-        AppLocalizations.delegate, // Adicionando a delegada correta
+      theme: ThemeData(primarySwatch: Colors.blue),
+      locale: localeController.locale,  // Usando o idioma globalmente
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        Locale('en', 'US'), // Inglês
-        Locale('pt', 'BR'), // Português
-        Locale('ja', 'JP'), // Japonês
-        Locale('zh', 'CN'), // Mandarim
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('pt', 'BR'),
+        Locale('ja', 'JP'),
+        Locale('zh', 'CN'),
       ],
       home: HomeScreen(
-        onLocaleChange: _setLocale, // Passando a função que altera o locale
-        currentLocale: _locale, // Passando o currentLocale também
+        // Agora não precisamos mais passar currentLocale ou onLocaleChange
+        // A mudança de idioma é tratada pelo LocaleController diretamente
       ),
     );
   }

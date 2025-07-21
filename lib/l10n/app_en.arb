@@ -3,5 +3,6 @@
   "welcome": "Welcome to TravelApp!",
   "about_us": "About us",
   "language": "Language",
-  "search_city": "Search a city..."
+  "search_city": "Search a city...",
+  "language_name": "English"
 }

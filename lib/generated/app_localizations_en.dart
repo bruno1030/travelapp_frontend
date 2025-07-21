@@ -22,4 +22,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_city => 'Search a city...';
+
+  @override
+  String get language_name => 'English';
 }

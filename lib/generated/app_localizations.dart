@@ -131,6 +131,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search a city...'**
   String get search_city;
+
+  /// No description provided for @language_name.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_name;
 }
 
 class _AppLocalizationsDelegate

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/widgets/menu_button.dart';
+import 'package:provider/provider.dart';
+import 'package:travelapp_frontend/controllers/locale_controller.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(Locale) onLocaleChange;
-  final Locale currentLocale; // Adicionando o parâmetro currentLocale
 
   const HomeAppBar({
     super.key,
     required this.onLocaleChange,
-    required this.currentLocale, // Passando currentLocale no construtor
   });
 
   @override
+  Size get preferredSize => const Size.fromHeight(80);
+
+  @override
   Widget build(BuildContext context) {
+    final localeController = Provider.of<LocaleController>(context);
+
     return AppBar(
       backgroundColor: const Color(0xFF020202),
       toolbarHeight: 80,
@@ -37,13 +42,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         MenuButton(
-          onLocaleChange: onLocaleChange,
-          currentLocale: currentLocale, // Passando currentLocale para MenuButton
+          onLocaleChange: (locale) {
+            localeController.setLocale(locale); // Usando o LocaleController para mudar o idioma
+            onLocaleChange(locale); // Notificando a mudança através do callback, se necessário
+          },
+          currentLocale: localeController.locale, // Pegando o locale atual do LocaleController
         ),
       ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
 }
