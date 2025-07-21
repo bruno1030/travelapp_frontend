@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/widgets/menu_button.dart';
 
-class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final Locale currentLocale;
   final Function(Locale) onLocaleChange;
-  final Locale currentLocale; // Adicionando o parâmetro currentLocale
 
   const HomeAppBar({
     super.key,
     required this.onLocaleChange,
-    required this.currentLocale, // Passando currentLocale no construtor
+    required this.currentLocale,
   });
+
+  @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  late Locale _currentLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentLocale = widget.currentLocale;
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentLocale != widget.currentLocale) {
+      setState(() {
+        _currentLocale = widget.currentLocale;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +63,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         MenuButton(
-          onLocaleChange: onLocaleChange,
-          currentLocale: currentLocale, // Passando currentLocale para MenuButton
+          onLocaleChange: (locale) {
+            widget.onLocaleChange(locale);
+            setState(() {
+              _currentLocale = locale;
+            });
+          },
+          currentLocale: _currentLocale,
         ),
       ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
 }

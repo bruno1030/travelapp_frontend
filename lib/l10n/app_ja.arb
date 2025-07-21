@@ -3,5 +3,6 @@
   "welcome": "ClickHuntへようこそ!",
   "about_us": "私たちについて",
   "language": "言語",
-  "search_city": "都市を検索..."
+  "search_city": "都市を検索...",
+  "language_name": "日本語"
 }

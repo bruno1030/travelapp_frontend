@@ -3,5 +3,6 @@
   "welcome": "Bem-vindo ao TravelApp!",
   "about_us": "Sobre nós",
   "language": "Idioma",
-  "search_city": "Pesquise uma cidade..."
+  "search_city": "Pesquise uma cidade...",
+  "language_name": "Português"
 }

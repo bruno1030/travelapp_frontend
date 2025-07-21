@@ -22,4 +22,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get search_city => '都市を検索...';
+
+  @override
+  String get language_name => '日本語';
 }

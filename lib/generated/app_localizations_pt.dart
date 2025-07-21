@@ -22,4 +22,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get search_city => 'Pesquise uma cidade...';
+
+  @override
+  String get language_name => 'Português';
 }
