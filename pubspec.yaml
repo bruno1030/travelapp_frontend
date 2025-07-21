@@ -42,6 +42,8 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
+  
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +63,9 @@ dev_dependencies:
     
   intl_utils: ^2.0.0
 
+  flutter_gen_runner: ^5.3.2
+  build_runner: any
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -74,6 +79,13 @@ flutter:
 
   assets:
   - assets/logo_FE1F80.png
+  - assets/flags/br_pt.png
+  - assets/flags/china.jpeg
+  - assets/flags/japan.png
+  - assets/flags/us_uk.jpeg
+
+  generate: true
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

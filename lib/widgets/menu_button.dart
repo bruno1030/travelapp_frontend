@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; // Adicionando suporte a localizações
+import 'package:travelapp_frontend/generated/app_localizations.dart'; // Adicionando o arquivo de localizações
 
 class MenuButton extends StatelessWidget {
-  final Function(Locale) onLocaleChange; // Recebendo a função para mudar o idioma
+  final Function(Locale) onLocaleChange;
+  final Locale currentLocale;
 
-  const MenuButton({super.key, required this.onLocaleChange});
+  const MenuButton({
+    super.key,
+    required this.onLocaleChange,
+    required this.currentLocale,
+  });
 
   @override
   Widget build(BuildContext context) {
+
+  String aboutUs = AppLocalizations.of(context)?.about_us ?? 'About us..';
+
     return PopupMenuButton<String>(
       icon: const Icon(Icons.menu, color: Colors.white),
       onSelected: (value) {
@@ -15,7 +24,7 @@ class MenuButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('About us'),
+              title: Text(aboutUs),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,27 +51,28 @@ class MenuButton extends StatelessWidget {
             ),
           );
         }
-        // Aqui, você pode adicionar lógica para mudar o idioma
+
         if (value == 'change_language') {
           _showLanguageDialog(context);
         }
       },
       itemBuilder: (BuildContext context) => [
         PopupMenuItem<String>(
-          value: 'language',
+          value: 'change_language',
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage('assets/flags/${_getFlagForLocale(Locale('pt', 'BR'))}'),
+                backgroundImage:
+                    AssetImage('assets/flags/${_getFlagForLocale(currentLocale)}'),
               ),
               const SizedBox(width: 8),
-              Text(_getLanguageNameForLocale(Locale('pt', 'BR'))),
+              Text(_getLanguageNativeName(currentLocale)),
             ],
           ),
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: 'about',
-          child: Text('About us'),
+          child: Text(aboutUs),
         ),
       ],
     );
@@ -77,22 +87,22 @@ class MenuButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _languageOption(context, Locale('pt', 'BR'), 'Portuguese'),
-            _languageOption(context, Locale('en', 'US'), 'English'),
-            _languageOption(context, Locale('ja', 'JP'), 'Japanese'),
-            _languageOption(context, Locale('zh', 'CN'), 'Mandarin'),
+            _languageOption(context, const Locale('pt', 'BR')),
+            _languageOption(context, const Locale('en', 'US')),
+            _languageOption(context, const Locale('ja', 'JP')),
+            _languageOption(context, const Locale('zh', 'CN')),
           ],
         ),
       ),
     );
   }
 
-  Widget _languageOption(BuildContext context, Locale locale, String language) {
+  Widget _languageOption(BuildContext context, Locale locale) {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: AssetImage('assets/flags/${_getFlagForLocale(locale)}'),
       ),
-      title: Text(language),
+      title: Text(_getLanguageNativeName(locale)),
       onTap: () {
         onLocaleChange(locale);
         Navigator.pop(context);
@@ -103,28 +113,28 @@ class MenuButton extends StatelessWidget {
   String _getFlagForLocale(Locale locale) {
     switch (locale.languageCode) {
       case 'en':
-        return 'us.png'; // Caminho da bandeira dos EUA
+        return 'us_uk.jpeg';
       case 'pt':
-        return 'br.png'; // Caminho da bandeira do Brasil
+        return 'br_pt.png';
       case 'ja':
-        return 'jp.png'; // Caminho da bandeira do Japão
+        return 'japan.png';
       case 'zh':
-        return 'cn.png'; // Caminho da bandeira da China
+        return 'china.jpeg';
       default:
-        return 'us.png';
+        return 'us_uk.jpeg';
     }
   }
 
-  String _getLanguageNameForLocale(Locale locale) {
+  String _getLanguageNativeName(Locale locale) {
     switch (locale.languageCode) {
       case 'en':
         return 'English';
       case 'pt':
-        return 'Portuguese';
+        return 'Português';
       case 'ja':
-        return 'Japanese';
+        return '日本語';
       case 'zh':
-        return 'Mandarin';
+        return '中文';
       default:
         return 'English';
     }

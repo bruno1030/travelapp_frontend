@@ -6,11 +6,14 @@ import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
 import 'package:travelapp_frontend/screens/city_search_screen.dart'; // Importando a nova tela de pesquisa
 import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Importando CityPhotosScreen
+import 'package:flutter_localizations/flutter_localizations.dart'; // Adicionando suporte a localizações
+import 'package:travelapp_frontend/generated/app_localizations.dart'; // Adicionando o arquivo de localizações
 
 class HomeScreen extends StatefulWidget {
   final Function(Locale) onLocaleChange; // Novo parâmetro
+  final Locale currentLocale; // Recebendo o currentLocale
 
-  const HomeScreen({super.key, required this.onLocaleChange});
+  const HomeScreen({super.key, required this.onLocaleChange, required this.currentLocale});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -36,10 +39,21 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchCities();
   }
 
+  // Função que será chamada ao mudar o idioma
+  void _changeLocale(Locale locale) {
+    widget.onLocaleChange(locale); // Alterando a linguagem através da função passada
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Pegando o texto traduzido para "Search a city"
+    String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city..';
+
     return Scaffold(
-      appBar: HomeAppBar(onLocaleChange: widget.onLocaleChange), // Passando o onLocaleChange para o HomeAppBar
+      appBar: HomeAppBar(
+        onLocaleChange: _changeLocale, // Passando a função que altera o locale
+        currentLocale: widget.currentLocale, // Passando o currentLocale para o AppBar
+      ),
       body: Container(
         color: Color(0xFF262626),
         child: Column(
@@ -54,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context) => CitySearchScreen(
                         cities: cities,
                         onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
+                        currentLocale: widget.currentLocale, // Passando o currentLocale
                       ),
                     ),
                   );
@@ -68,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Search a city...',
+                          searchCityText,  // Usando o texto traduzido
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.7),
                             fontSize: 16,
@@ -104,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   cityId: city.id, 
                                   cityName: city.name,
                                   onLocaleChange: widget.onLocaleChange,  // Passando a função onLocaleChange
+                                  currentLocale: widget.currentLocale, // Passando o currentLocale
                                 ),
                               ),
                             );
@@ -118,6 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CustomBottomBar(
+        onLocaleChange: widget.onLocaleChange,
+        currentLocale: widget.currentLocale, // Passando currentLocale para o CustomBottomBar
       ),
     );
   }
