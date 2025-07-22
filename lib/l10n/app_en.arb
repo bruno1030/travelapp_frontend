@@ -4,5 +4,10 @@
   "about_us": "About us",
   "language": "Language",
   "search_city": "Search a city...",
-  "language_name": "English"
+  "language_name": "English",
+  "clickhunt_version": "ClickHunt v1.0",
+  "developed_by": "Developed by Bruno Martins",
+  "close": "Close",
+  "take_me_there": "Take me there!",
+  "explore_cities": "Explore Cities"
 }

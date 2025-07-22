@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class PhotoDetailScreen extends StatelessWidget {
   final String imageUrl;
@@ -26,6 +27,7 @@ class PhotoDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final takeMeThere = AppLocalizations.of(context)?.take_me_there ?? 'Take me there!';
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -66,14 +68,14 @@ class PhotoDetailScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: _launchMaps,
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.location_pin, color: Colors.white),
                     SizedBox(width: 8),
                     Text(
-                      'Take me there!',
+                      takeMeThere,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,

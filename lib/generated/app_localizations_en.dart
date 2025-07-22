@@ -25,4 +25,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get language_name => 'English';
+
+  @override
+  String get clickhunt_version => 'ClickHunt v1.0';
+
+  @override
+  String get developed_by => 'Developed by Bruno Martins';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get take_me_there => 'Take me there!';
+
+  @override
+  String get explore_cities => 'Explore Cities';
 }

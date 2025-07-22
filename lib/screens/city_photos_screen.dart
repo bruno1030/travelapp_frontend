@@ -5,16 +5,17 @@ import 'package:travelapp_frontend/models/photo.dart';
 import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/screens/photo_details_screen.dart';
+import 'package:travelapp_frontend/models/city.dart';
+import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:provider/provider.dart'; // Para acessar o LocaleController
 
 class CityPhotosScreen extends StatefulWidget {
-  final int cityId;
-  final String cityName;
+  final City city;
   final Function(Locale) onLocaleChange;
 
   const CityPhotosScreen({
     super.key,
-    required this.cityId,
-    required this.cityName,
+    required this.city,
     required this.onLocaleChange,
   });
 
@@ -27,7 +28,7 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
 
   Future<void> fetchPhotos() async {
     try {
-      final data = await ApiService.fetchPhotosByCityId(widget.cityId);
+      final data = await ApiService.fetchPhotosByCityId(widget.city.id);  // Ajuste para usar city.id
       setState(() {
         photos = data;
       });
@@ -44,9 +45,13 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Provider.of<LocaleController>(context).locale;
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.cityName, 
+        city: widget.city,  // Passando o objeto city completo
+        locale: locale,     // Passando o locale atual
+        title: null,        // Passando null para usar o translatedName da cidade
       ),
       bottomNavigationBar: CustomBottomBar(),
       body: Container(

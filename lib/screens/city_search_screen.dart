@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:travelapp_frontend/models/city.dart';
 import 'package:travelapp_frontend/screens/city_photos_screen.dart';
 import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
+import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class CitySearchScreen extends StatefulWidget {
   final List<City> cities;
@@ -50,9 +55,16 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localeController = Provider.of<LocaleController>(context); // Acessando o controlador de idioma
+    final currentLocale = localeController.locale;  // Pegando o idioma atual
+    final exploreCities = AppLocalizations.of(context)?.explore_cities ?? 'Explore Cities';
+    String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city...';
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Search Cities',
+        city: null,  // Passando null para city, já que não há cidade associada à tela de busca
+        locale: currentLocale, // Passando o locale atual
+        title: exploreCities, // Passando "Search Cities" como título
       ),
       body: Container(
         color: const Color(0xFF262626),
@@ -64,7 +76,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                 controller: _controller,
                 onChanged: _filterCities,
                 decoration: InputDecoration(
-                  hintText: 'Search a city...',
+                  hintText: searchCityText,
                   hintStyle: TextStyle(
                     color: Colors.white.withOpacity(0.4),
                     fontSize: 16,
@@ -84,9 +96,12 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                 itemCount: suggestions.length,
                 itemBuilder: (context, index) {
                   final city = suggestions[index];
+                  // Pegando o nome traduzido ou o nome padrão caso não exista tradução
+                  final cityName = city.translations[currentLocale.languageCode] ?? city.name;
+
                   return ListTile(
                     title: Text(
-                      city.name,
+                      cityName,
                       style: const TextStyle(color: Colors.white),
                     ),
                     onTap: () async {
@@ -94,8 +109,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => CityPhotosScreen(
-                            cityId: city.id,
-                            cityName: city.name,
+                            city: city,  // Passando o objeto City completo
                             onLocaleChange: widget.onLocaleChange,
                           ),
                         ),

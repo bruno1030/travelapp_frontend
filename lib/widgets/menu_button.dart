@@ -17,6 +17,10 @@ class MenuButton extends StatelessWidget {
     final languageLabel = _getLanguageNativeName(currentLocale);
     final flagPath = _getFlagForLocale(currentLocale);
 
+    final clickHuntVersion = AppLocalizations.of(context)?.clickhunt_version ?? 'ClickHunt v1.0';
+    final developedBy = AppLocalizations.of(context)?.developed_by ?? 'Developed by Bruno Martins';
+    final close = AppLocalizations.of(context)?.close ?? 'Close';
+
     return PopupMenuButton<String>(
       icon: const Icon(Icons.menu, color: Colors.white),
       onSelected: (value) {
@@ -28,10 +32,10 @@ class MenuButton extends StatelessWidget {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('ClickHunt v1.0'),
+                children: [
+                  Text(clickHuntVersion),
                   SizedBox(height: 8),
-                  Text('Developed by Bruno Martins'),
+                  Text(developedBy),
                   SizedBox(height: 12),
                   Row(
                     children: [
@@ -45,7 +49,7 @@ class MenuButton extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
+                  child: Text(close),
                 ),
               ],
             ),

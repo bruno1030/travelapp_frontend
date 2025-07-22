@@ -4,5 +4,10 @@
   "about_us": "私たちについて",
   "language": "言語",
   "search_city": "都市を検索...",
-  "language_name": "日本語"
+  "language_name": "日本語",
+  "clickhunt_version": "ClickHunt バージョン1.0",
+  "developed_by": "開発者: Bruno Martins",
+  "close": "閉じる",
+  "take_me_there": "そこに連れてって！",
+  "explore_cities": "都市を探す"
 }

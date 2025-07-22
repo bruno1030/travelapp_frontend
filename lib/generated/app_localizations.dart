@@ -137,6 +137,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get language_name;
+
+  /// No description provided for @clickhunt_version.
+  ///
+  /// In en, this message translates to:
+  /// **'ClickHunt v1.0'**
+  String get clickhunt_version;
+
+  /// No description provided for @developed_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed by Bruno Martins'**
+  String get developed_by;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @take_me_there.
+  ///
+  /// In en, this message translates to:
+  /// **'Take me there!'**
+  String get take_me_there;
+
+  /// No description provided for @explore_cities.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Cities'**
+  String get explore_cities;
 }
 
 class _AppLocalizationsDelegate
