@@ -25,4 +25,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get language_name => 'Português';
+
+  @override
+  String get clickhunt_version => 'ClickHunt v1.0';
+
+  @override
+  String get developed_by => 'Desenvolvido por Bruno Martins';
+
+  @override
+  String get close => 'Fechar';
+
+  @override
+  String get take_me_there => 'Me leve até lá!';
 }

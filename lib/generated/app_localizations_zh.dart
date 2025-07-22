@@ -25,4 +25,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get language_name => '中文';
+
+  @override
+  String get clickhunt_version => 'ClickHunt 版本1.0';
+
+  @override
+  String get developed_by => '由 Bruno Martins 开发';
+
+  @override
+  String get close => '关闭';
+
+  @override
+  String get take_me_there => '带我去那里！';
 }

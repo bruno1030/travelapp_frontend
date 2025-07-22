@@ -4,5 +4,9 @@
   "about_us": "Sobre nós",
   "language": "Idioma",
   "search_city": "Pesquise uma cidade...",
-  "language_name": "Português"
+  "language_name": "Português",
+  "clickhunt_version": "ClickHunt v1.0",
+  "developed_by": "Desenvolvido por Bruno Martins",
+  "close": "Fechar",
+  "take_me_there": "Me leve até lá!"
 }

@@ -25,4 +25,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get language_name => '日本語';
+
+  @override
+  String get clickhunt_version => 'ClickHunt バージョン1.0';
+
+  @override
+  String get developed_by => '開発者: Bruno Martins';
+
+  @override
+  String get close => '閉じる';
+
+  @override
+  String get take_me_there => 'そこに連れてって！';
 }

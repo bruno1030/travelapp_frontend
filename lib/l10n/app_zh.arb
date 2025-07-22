@@ -4,5 +4,9 @@
   "about_us": "关于我们",
   "language": "语言",
   "search_city": "搜索城市...",
-  "language_name": "中文"
+  "language_name": "中文",
+  "clickhunt_version": "ClickHunt 版本1.0",
+  "developed_by": "由 Bruno Martins 开发",
+  "close": "关闭",
+  "take_me_there": "带我去那里！"
 }
