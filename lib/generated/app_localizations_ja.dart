@@ -37,4 +37,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get take_me_there => 'そこに連れてって！';
+
+  @override
+  String get explore_cities => '都市を探す';
 }

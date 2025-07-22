@@ -37,4 +37,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get take_me_there => '带我去那里！';
+
+  @override
+  String get explore_cities => '探索城市';
 }

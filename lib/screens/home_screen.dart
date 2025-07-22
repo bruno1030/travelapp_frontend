@@ -42,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
     final currentLocale = localeController.locale;  // Pegando o idioma atual
+    String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city...';
 
     return Scaffold(
       appBar: HomeAppBar(
@@ -51,6 +52,43 @@ class _HomeScreenState extends State<HomeScreen> {
         color: const Color(0xFF262626),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CitySearchScreen(
+                        cities: cities,
+                        onLocaleChange: localeController.setLocale,  // Passando a função onLocaleChange
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          searchCityText,  // Usando o texto traduzido
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Icon(Icons.search, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             // Exibindo cidades
             Expanded(
               child: cities.isEmpty
@@ -77,8 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CityPhotosScreen(
-                                  cityId: city.id,
-                                  cityName: cityName, // Passando o nome traduzido ou o padrão
+                                  city: city,
                                   onLocaleChange: localeController.setLocale,
                                 ),
                               ),

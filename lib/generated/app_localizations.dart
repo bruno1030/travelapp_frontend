@@ -161,6 +161,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Take me there!'**
   String get take_me_there;
+
+  /// No description provided for @explore_cities.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Cities'**
+  String get explore_cities;
 }
 
 class _AppLocalizationsDelegate

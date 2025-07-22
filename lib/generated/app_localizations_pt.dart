@@ -37,4 +37,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get take_me_there => 'Me leve até lá!';
+
+  @override
+  String get explore_cities => 'Explorar Cidades';
 }
