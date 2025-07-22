@@ -52,8 +52,7 @@ class _CitySearchScreenState extends State<CitySearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Search Cities', 
-        onLocaleChange: widget.onLocaleChange,
+        title: 'Search Cities',
       ),
       body: Container(
         color: const Color(0xFF262626),

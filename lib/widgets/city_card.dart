@@ -32,6 +32,7 @@ class CityCard extends StatelessWidget {
               child: Text(
                 cityName,
                 style: TextStyle(
+                  fontFamily: 'NotoSans',  // Usando a fonte customizada
                   color: Colors.white,  // Cor do texto
                   fontSize: 16,         // Tamanho da fonte
                   fontWeight: FontWeight.bold,  // Deixar o nome em negrito

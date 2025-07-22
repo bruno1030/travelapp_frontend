@@ -6,13 +6,11 @@ import 'package:travelapp_frontend/controllers/locale_controller.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
-  final Function(Locale) onLocaleChange;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.leading,
-    required this.onLocaleChange,
   });
 
   @override

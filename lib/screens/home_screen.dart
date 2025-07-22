@@ -20,9 +20,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<City> cities = [];
 
+  // Função para carregar cidades com as traducoes
   Future<void> fetchCities() async {
     try {
-      final data = await ApiService.fetchCities();
+      final data = await ApiService.fetchCities(); // Sem passar idioma
       setState(() {
         cities = data;
       });
@@ -34,15 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchCities();
+    fetchCities();  // Carregando as cidades logo ao iniciar
   }
 
   @override
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
-    Locale currentLocale = localeController.locale;  // Pegando o idioma atual diretamente do controller
-
-    String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city..';
+    final currentLocale = localeController.locale;  // Pegando o idioma atual
 
     return Scaffold(
       appBar: HomeAppBar(
@@ -52,43 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: const Color(0xFF262626),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CitySearchScreen(
-                        cities: cities,
-                        onLocaleChange: localeController.setLocale,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          searchCityText,  // Usando o texto traduzido
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      const Icon(Icons.search, color: Colors.white),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Exibindo cidades
             Expanded(
               child: cities.isEmpty
                   ? const Center(child: CircularProgressIndicator())
@@ -103,6 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: cities.length,
                       itemBuilder: (context, index) {
                         final city = cities[index];
+                        // Pegando o nome traduzido ou fallback para o nome original
+                        final cityName = city.translations[currentLocale.languageCode] ?? city.name;
+
+                        print('cityName: $cityName');
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -110,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => CityPhotosScreen(
                                   cityId: city.id,
-                                  cityName: city.name,
+                                  cityName: cityName, // Passando o nome traduzido ou o padrão
                                   onLocaleChange: localeController.setLocale,
                                 ),
                               ),
@@ -118,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CityCard(
                             imageUrl: city.coverPhotoUrl,
-                            cityName: city.name,
+                            cityName: cityName, // Usando o nome traduzido ou o padrão
                           ),
                         );
                       },
