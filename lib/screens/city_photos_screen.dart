@@ -47,7 +47,6 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: widget.cityName, 
-        onLocaleChange: widget.onLocaleChange,
       ),
       bottomNavigationBar: CustomBottomBar(),
       body: Container(

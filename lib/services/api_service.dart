@@ -9,7 +9,9 @@ class ApiService {
     final response = await http.get(Uri.parse('$baseUrl/cities'));
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+      // Garantindo que a resposta seja decodificada corretamente em UTF-8
+      var utf8DecodedBody = utf8.decode(response.bodyBytes);  // Use bodyBytes para garantir a integridade
+      var data = jsonDecode(utf8DecodedBody);  // Agora decodifica o JSON da resposta
       return (data as List).map((city) => City.fromJson(city)).toList();
     } else {
       throw Exception('Falha ao carregar cidades');
