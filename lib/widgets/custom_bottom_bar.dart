@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -125,16 +126,33 @@ class CustomBottomBar extends StatelessWidget {
       ),
     );
 
-    // Chamar o método para salvar no backend
     if (imageFile != null) {
-      if (kIsWeb) {
-        // No Web, apenas debug da foto + localização
-        debugPrint('Web: savePhoto chamado! Lat: ${position.latitude}, Lon: ${position.longitude}');
-      } else {
-        await ApiService.savePhoto(
-          imageFile: File(imageFile.path),
-          latitude: position.latitude,
-          longitude: position.longitude,
+      try {
+        if (kIsWeb) {
+          // Para web, lemos bytes e criamos um arquivo temporário "fake" com timestamp
+          Uint8List imageBytes = await imageFile.readAsBytes();
+          String fakeFileName =
+              'web_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          File fakeFile = File(fakeFileName); // Apenas estrutura, não precisa existir de fato
+          await ApiService.savePhoto(
+            imageFile: fakeFile,
+            imageBytes: imageBytes,
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+        } else {
+          // Mobile (iOS/Android)
+          File file = File(imageFile.path);
+          await ApiService.savePhoto(
+            imageFile: file,
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+        }
+      } catch (e) {
+        debugPrint('Erro ao salvar foto: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao salvar foto: $e')),
         );
       }
     }
