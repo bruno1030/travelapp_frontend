@@ -1,0 +1,13 @@
+{
+  "hello": "Bonjour",
+  "welcome": "Bienvenue sur Clixpot !",
+  "about_us": "À propos de nous",
+  "language": "Langue",
+  "search_city": "Rechercher une ville...",
+  "language_name": "Français",
+  "clickhunt_version": "Clixpot v1.0",
+  "developed_by": "Développé par Bruno Martins",
+  "close": "Fermer",
+  "take_me_there": "Emmène-moi là-bas !",
+  "explore_cities": "Explorer les villes"
+}

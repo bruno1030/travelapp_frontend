@@ -1,11 +1,11 @@
 {
   "hello": "Olá",
-  "welcome": "Bem-vindo ao TravelApp!",
+  "welcome": "Bem-vindo ao Clixpot!",
   "about_us": "Sobre nós",
   "language": "Idioma",
   "search_city": "Pesquise uma cidade...",
   "language_name": "Português",
-  "clickhunt_version": "ClickHunt v1.0",
+  "clickhunt_version": "Clixpot v1.0",
   "developed_by": "Desenvolvido por Bruno Martins",
   "close": "Fechar",
   "take_me_there": "Me leve até lá!",

@@ -12,7 +12,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get hello => 'Olá';
 
   @override
-  String get welcome => 'Bem-vindo ao TravelApp!';
+  String get welcome => 'Bem-vindo ao Clixpot!';
 
   @override
   String get about_us => 'Sobre nós';
@@ -27,7 +27,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get language_name => 'Português';
 
   @override
-  String get clickhunt_version => 'ClickHunt v1.0';
+  String get clickhunt_version => 'Clixpot v1.0';
 
   @override
   String get developed_by => 'Desenvolvido por Bruno Martins';

@@ -91,6 +91,9 @@ flutter:
   - assets/flags/china.jpeg
   - assets/flags/japan.png
   - assets/flags/us_uk.jpeg
+  - assets/flags/germany.jpeg
+  - assets/flags/france.jpeg
+  - assets/flags/spain.jpeg
 
   generate: true
 

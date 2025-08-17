@@ -17,7 +17,7 @@ class MenuButton extends StatelessWidget {
     final languageLabel = _getLanguageNativeName(currentLocale);
     final flagPath = _getFlagForLocale(currentLocale);
 
-    final clickHuntVersion = AppLocalizations.of(context)?.clickhunt_version ?? 'ClickHunt v1.0';
+    final clickHuntVersion = AppLocalizations.of(context)?.clickhunt_version ?? 'Clixpot v1.0';
     final developedBy = AppLocalizations.of(context)?.developed_by ?? 'Developed by Bruno Martins';
     final close = AppLocalizations.of(context)?.close ?? 'Close';
 
@@ -93,6 +93,9 @@ class MenuButton extends StatelessWidget {
             _languageOption(context, const Locale('en', 'US')),
             _languageOption(context, const Locale('ja', 'JP')),
             _languageOption(context, const Locale('zh', 'CN')),
+            _languageOption(context, const Locale('de', 'DE')),
+            _languageOption(context, const Locale('es', 'ES')),
+            _languageOption(context, const Locale('fr', 'FR')),
           ],
         ),
       ),
@@ -122,6 +125,12 @@ class MenuButton extends StatelessWidget {
         return 'japan.png';
       case 'zh':
         return 'china.jpeg';
+      case 'de':
+        return 'germany.jpeg';
+      case 'es':
+        return 'spain.jpeg';
+      case 'fr':
+        return 'france.jpeg';
       default:
         return 'us_uk.jpeg';
     }
@@ -137,6 +146,12 @@ class MenuButton extends StatelessWidget {
         return '日本語';
       case 'zh':
         return '中文';
+      case 'de':
+        return 'Deutsch';
+      case 'es':
+        return 'Español';
+      case 'fr':
+        return 'Français';
       default:
         return 'English';
     }
