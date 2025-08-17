@@ -31,7 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(width: 8),
           const Text(
-            'ClickHunt',
+            'Clixpot',
             style: TextStyle(
               color: Color(0xFFFE1F80),
               fontSize: 30,

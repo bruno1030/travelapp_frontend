@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hello => '你好';
 
   @override
-  String get welcome => '欢迎使用ClickHunt!';
+  String get welcome => '欢迎使用Clixpot!';
 
   @override
   String get about_us => '关于我们';
@@ -27,7 +27,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get language_name => '中文';
 
   @override
-  String get clickhunt_version => 'ClickHunt 版本1.0';
+  String get clickhunt_version => 'Clixpot 版本1.0';
 
   @override
   String get developed_by => '由 Bruno Martins 开发';

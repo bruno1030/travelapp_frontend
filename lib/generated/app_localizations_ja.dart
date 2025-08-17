@@ -12,7 +12,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hello => 'こんにちは';
 
   @override
-  String get welcome => 'ClickHuntへようこそ!';
+  String get welcome => 'Clixpotへようこそ!';
 
   @override
   String get about_us => '私たちについて';
@@ -27,7 +27,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get language_name => '日本語';
 
   @override
-  String get clickhunt_version => 'ClickHunt バージョン1.0';
+  String get clickhunt_version => 'Clixpot バージョン1.0';
 
   @override
   String get developed_by => '開発者: Bruno Martins';

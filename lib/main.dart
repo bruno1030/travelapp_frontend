@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     final localeController = Provider.of<LocaleController>(context);
 
     return MaterialApp(
-      title: 'ClickHunt',
+      title: 'Clixpot',
       theme: ThemeData(primarySwatch: Colors.blue),
       locale: localeController.locale,  // Usando o idioma globalmente
       localizationsDelegates: const [
@@ -37,6 +37,9 @@ class MyApp extends StatelessWidget {
         Locale('pt', 'BR'),
         Locale('ja', 'JP'),
         Locale('zh', 'CN'),
+        Locale('de', 'DE'),
+        Locale('es', 'ES'),
+        Locale('fr', 'FR'),
       ],
       home: HomeScreen(
         // Agora não precisamos mais passar currentLocale ou onLocaleChange
