@@ -26,8 +26,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Image.asset(
             'assets/logo_FE1F80.png',
-            height: 50,
-            width: 50,
+            height: 60,
+            width: 60,
           ),
           const SizedBox(width: 8),
           const Text(
