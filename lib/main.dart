@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart'; // <- adicionado
 import 'screens/home_screen.dart';
 import 'generated/app_localizations.dart';
 import 'controllers/locale_controller.dart';
+import 'firebase_options.dart'; // <- gerado pelo FlutterFire CLI
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // <- necessário para Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // <- inicializa Firebase
+  );
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => LocaleController(),
@@ -41,10 +48,7 @@ class MyApp extends StatelessWidget {
         Locale('es', 'ES'),
         Locale('fr', 'FR'),
       ],
-      home: HomeScreen(
-        // Agora não precisamos mais passar currentLocale ou onLocaleChange
-        // A mudança de idioma é tratada pelo LocaleController diretamente
-      ),
+      home: const HomeScreen(),
     );
   }
 }

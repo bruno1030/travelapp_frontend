@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  http: ^0.13.4   # Para fazer requisições HTTP
+  http: ^1.5.0   # Para fazer requisições HTTP
   cached_network_image: ^3.2.0  # Para cache de imagens
 
   url_launcher: ^6.2.5
@@ -49,9 +49,14 @@ dependencies:
 
   shared_preferences: ^2.0.15
 
-  permission_handler: ^11.3.0
-  image_picker: ^1.1.2
-  geolocator: ^10.1.0
+  permission_handler: ^12.0.1
+  image_picker: ^1.2.0
+  geolocator: ^14.0.2
+
+  firebase_core: ^4.0.0      # Inicializa o Firebase no Flutter
+  firebase_auth: ^6.0.1      # Gerencia autenticação (Email/Senha e Google)
+
+  google_sign_in: ^7.1.1
 
 dev_dependencies:
   flutter_test:
@@ -62,9 +67,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
   flutter_localizations:
     sdk: flutter

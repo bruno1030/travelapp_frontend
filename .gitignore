@@ -57,3 +57,9 @@ ios/Podfile.lock
 # Arquivos de ícones gerados para Android e iOS
 android/app/src/main/res/mipmap-*/ic_launcher.png
 ios/Runner/Assets.xcassets/AppIcon.appiconset/*
+
+# Firebase config
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
