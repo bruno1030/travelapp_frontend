@@ -8,7 +8,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:travelapp_frontend/controllers/auth_controller.dart';
 import 'package:travelapp_frontend/screens/home_screen.dart';
+import 'package:travelapp_frontend/screens/profile_screen.dart';
 import 'package:travelapp_frontend/services/api_service.dart';
 
 class CustomBottomBar extends StatelessWidget {
@@ -17,6 +19,7 @@ class CustomBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
+    final auth = Provider.of<AuthController>(context);
 
     return BottomAppBar(
       color: const Color(0xFF020202),
@@ -31,7 +34,7 @@ class CustomBottomBar extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                   (route) => false,
                 );
               },
@@ -41,6 +44,25 @@ class CustomBottomBar extends StatelessWidget {
               label: 'Upload Photo',
               onTap: () async {
                 await _handleUploadPhoto(context);
+              },
+            ),
+            _BottomBarItem(
+              icon: Icons.person,
+              label: 'Profile',
+              onTap: () {
+                if (auth.isLoggedIn) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ProfileScreen(), // Já trata login se não estiver logado
+                    ),
+                  );
+                }
               },
             ),
           ],
@@ -129,7 +151,6 @@ class CustomBottomBar extends StatelessWidget {
     if (imageFile != null) {
       try {
         if (kIsWeb) {
-          // Para web, lemos bytes e criamos um arquivo temporário "fake" com timestamp
           Uint8List imageBytes = await imageFile.readAsBytes();
           String fakeFileName =
               'web_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -141,7 +162,6 @@ class CustomBottomBar extends StatelessWidget {
             longitude: position.longitude,
           );
         } else {
-          // Mobile (iOS/Android)
           File file = File(imageFile.path);
           await ApiService.savePhoto(
             imageFile: file,
