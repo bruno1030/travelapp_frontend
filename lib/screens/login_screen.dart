@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
-            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
@@ -54,28 +52,18 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                final message = await auth.signUpWithEmail(
-                  email: emailController.text.trim(),
-                  password: passwordController.text.trim(),
-                  username: usernameController.text.trim(),
-                );
-                if (message != null) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(message)));
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Account created! Check email.')));
-                }
-              },
-              child: const Text('Sign Up with Email'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
                 await auth.signInWithGoogle();
               },
-              child: const Text('Login with Google'),
+              child: const Text('Continue with Google'),
             ),
+            if (!kIsWeb && Platform.isIOS)
+              const SizedBox(height: 10),
+            if (!kIsWeb && Platform.isIOS)
+              SignInWithAppleButton(
+                onPressed: () async {
+                  await auth.signInWithApple();
+                },
+              ),
           ],
         ),
       ),
