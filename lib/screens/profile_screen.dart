@@ -10,6 +10,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
 
+    // Se o usuário não estiver logado, redireciona para a tela de login.
     if (!auth.isLoggedIn) {
       return const LoginScreen();
     }
@@ -30,10 +31,9 @@ class ProfileScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await auth.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
+                // Após o logout, não precisamos redirecionar explicitamente,
+                // pois o ProfileScreen já irá chamar o LoginScreen
+                // devido à lógica no início do método build.
               },
               child: const Text('Logout'),
             ),
