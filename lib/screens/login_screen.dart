@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
+import 'password_login_screen.dart';
+import 'create_account_screen.dart';
 import 'dart:io';
 
 class LoginScreen extends StatefulWidget {
@@ -13,42 +15,67 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
   bool _loading = false;
 
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _loginWithEmail(AuthController auth) async {
+  Future<void> _continueWithEmail(AuthController auth) async {
+    final email = emailController.text.trim();
+    
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, digite seu email')),
+      );
+      return;
+    }
+
+    // Validação básica de email
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, digite um email válido')),
+      );
+      return;
+    }
+
     setState(() {
       _loading = true;
     });
 
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
+    try {
+      // Chama método que verificará se email existe via endpoint
+      final userExists = await auth.checkUserByEmail(email);
+      
+      setState(() {
+        _loading = false;
+      });
 
-    final token = await auth.signInWithEmail(email, password);
-
-    setState(() {
-      _loading = false;
-    });
-
-    if (token != null && token.startsWith('ey')) {
-      // Token JWT válido retornado
+      if (userExists) {
+        // Email existe → vai para tela de senha
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PasswordLoginScreen(email: email),
+          ),
+        );
+      } else {
+        // Email não existe → vai para tela de criação de conta
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateAccountScreen(email: email),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login realizado com sucesso!')),
-      );
-      debugPrint('Firebase ID Token: $token');
-      // Aqui você pode enviar o token para o backend
-    } else {
-      // Token é mensagem de erro
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(token ?? 'Erro desconhecido')),
+        SnackBar(content: Text('Erro ao verificar email: $e')),
       );
     }
   }
@@ -69,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
           const SnackBar(content: Text('Login com Google realizado com sucesso!')),
         );
         debugPrint('Firebase ID Token: $token');
-        // Aqui você pode enviar o token para o backend
+        // Aqui você pode navegar para a home ou fazer outras ações
+        Navigator.of(context).pop(); // Volta para tela anterior
       }
     } catch (e) {
       setState(() {
@@ -158,8 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Expanded(
                     child: Divider(color: Color(0xFF27272A)),
                   ),
@@ -181,6 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32),
               TextField(
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -204,36 +233,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
-                  filled: true,
-                  fillColor: const Color(0xFF18181B),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFFE1F80),
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _loading ? null : () => _loginWithEmail(auth),
+                onPressed: _loading ? null : () => _continueWithEmail(auth),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFE1F80),
                   foregroundColor: Colors.white,
@@ -253,24 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
               ),
-              const SizedBox(height: 24),
-              TextButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          'Função de recuperação de senha ainda não implementada.'),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Esqueceu sua senha?',
-                  style: TextStyle(
-                    color: Color(0xFF9CA3AF),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              const SizedBox(height: 40),
             ],
           ),
         ),
