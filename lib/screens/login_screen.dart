@@ -15,6 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool _loading = false;
+
   @override
   void dispose() {
     emailController.dispose();
@@ -22,12 +24,69 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _loginWithEmail(AuthController auth) async {
+    setState(() {
+      _loading = true;
+    });
+
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    final token = await auth.signInWithEmail(email, password);
+
+    setState(() {
+      _loading = false;
+    });
+
+    if (token != null && token.startsWith('ey')) {
+      // Token JWT válido retornado
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login realizado com sucesso!')),
+      );
+      debugPrint('Firebase ID Token: $token');
+      // Aqui você pode enviar o token para o backend
+    } else {
+      // Token é mensagem de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(token ?? 'Erro desconhecido')),
+      );
+    }
+  }
+
+  Future<void> _loginWithGoogle(AuthController auth) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final token = await auth.signInWithGoogle();
+      setState(() {
+        _loading = false;
+      });
+
+      if (token != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login com Google realizado com sucesso!')),
+        );
+        debugPrint('Firebase ID Token: $token');
+        // Aqui você pode enviar o token para o backend
+      }
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao fazer login com Google: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF020202), // fundo dark igual ao bottom bar
+      backgroundColor: const Color(0xFF020202),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -39,7 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              // Placeholder para o logo do app
               Center(
                 child: Container(
                   width: 80,
@@ -80,11 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
-              // Botão Google (mantém estilo claro)
               ElevatedButton.icon(
-                onPressed: () async {
-                  await auth.signInWithGoogle();
-                },
+                onPressed: _loading ? null : () => _loginWithGoogle(auth),
                 icon: Image.network(
                   'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png',
                   height: 24,
@@ -103,7 +158,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              // Divisor "ou"
               Row(
                 children: const [
                   Expanded(
@@ -125,7 +179,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 32),
-              // Campo de email
               TextField(
                 controller: emailController,
                 style: const TextStyle(color: Color(0xFFF9FAFB)),
@@ -151,16 +204,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              // Botão de continuar (email)
-              ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Função de email ainda não implementada.'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+                  filled: true,
+                  fillColor: const Color(0xFF18181B),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFFE1F80),
+                      width: 2,
                     ),
-                  );
-                },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _loading ? null : () => _loginWithEmail(auth),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFE1F80),
                   foregroundColor: Colors.white,
@@ -169,22 +242,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Continuar'),
-                    SizedBox(width: 8),
-                    Icon(Icons.arrow_forward),
-                  ],
-                ),
+                child: _loading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Continuar'),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward),
+                        ],
+                      ),
               ),
               const SizedBox(height: 24),
-              // Link esquecer senha
               TextButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Função de recuperação de senha ainda não implementada.'),
+                      content: Text(
+                          'Função de recuperação de senha ainda não implementada.'),
                     ),
                   );
                 },

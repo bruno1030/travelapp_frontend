@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:io';
+
+// Importação condicional para funcionar no web e mobile
+import 'package:google_sign_in/google_sign_in.dart'
+    if (dart.library.html) 'package:travelapp_frontend/web_google_stub.dart';
 
 class AuthController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,15 +20,39 @@ class AuthController with ChangeNotifier {
     });
   }
 
-  Future<void> signInWithGoogle() async {
+  // Login com Google
+  Future<String?> signInWithGoogle() async {
     try {
       if (kIsWeb) {
+        // Web: usa popup do Firebase diretamente
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         googleProvider.setCustomParameters({'prompt': 'select_account'});
-        await _auth.signInWithPopup(googleProvider);
+        
+        UserCredential userCredential = await _auth.signInWithPopup(googleProvider);
+        currentUser = userCredential.user;
+        notifyListeners();
+        return await currentUser?.getIdToken();
       } else {
-        final provider = GoogleAuthProvider();
-        await _auth.signInWithProvider(provider);
+        // Android / iOS: usa GoogleSignIn
+        // Só importa e usa GoogleSignIn em mobile
+        final GoogleSignIn googleSignIn = GoogleSignIn(
+          scopes: ['email'],
+        );
+        
+        final googleUser = await googleSignIn.signIn();
+        if (googleUser == null) return null; // Usuário cancelou
+
+        final googleAuth = await googleUser.authentication();
+
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        );
+
+        UserCredential userCredential = await _auth.signInWithCredential(credential);
+        currentUser = userCredential.user;
+        notifyListeners();
+        return await currentUser?.getIdToken();
       }
     } catch (e) {
       debugPrint('Erro ao fazer login com Google: $e');
@@ -34,34 +60,8 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  Future<void> signInWithApple() async {
-    if (kIsWeb || !Platform.isIOS) return;
-
-    try {
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
-
-      final oAuthProvider = OAuthProvider('apple.com');
-      final authCredential = oAuthProvider.credential(
-        idToken: credential.identityToken,
-        accessToken: credential.authorizationCode,
-      );
-
-      await _auth.signInWithCredential(authCredential);
-    } catch (e) {
-      debugPrint('Erro ao fazer login com Apple: $e');
-      rethrow;
-    }
-  }
-
-  Future<String?> signInWithEmail({
-    required String email,
-    required String password,
-  }) async {
+  // Login com email e senha
+  Future<String?> signInWithEmail(String email, String password) async {
     try {
       UserCredential cred =
           await _auth.signInWithEmailAndPassword(email: email, password: password);
@@ -73,7 +73,7 @@ class AuthController with ChangeNotifier {
 
       currentUser = cred.user;
       notifyListeners();
-      return null;
+      return await currentUser?.getIdToken();
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
@@ -81,7 +81,34 @@ class AuthController with ChangeNotifier {
     }
   }
 
+  // Registro com email e senha
+  Future<String?> registerWithEmail(String email, String password) async {
+    try {
+      UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email: email, 
+        password: password
+      );
+
+      // Enviar email de verificação
+      await cred.user?.sendEmailVerification();
+      
+      // Fazer logout até verificar email
+      await _auth.signOut();
+      
+      return 'Conta criada! Verifique seu email antes de fazer login.';
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Erro ao criar conta.';
+    }
+  }
+
   Future<void> signOut() async {
+    if (!kIsWeb) {
+      // Só faz logout do GoogleSignIn em mobile
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+    }
     await _auth.signOut();
     currentUser = null;
     notifyListeners();
