@@ -121,23 +121,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             children: [
               const SizedBox(height: 40),
               Center(
-                child: Container(
+                child: Image.asset(
+                  'assets/logo_FE1F80.png',
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF27272A),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Logo',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF9CA3AF),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -150,16 +137,36 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Crie sua conta para ${widget.email}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF9CA3AF),
-                ),
-                textAlign: TextAlign.center,
-              ),
               const SizedBox(height: 40),
+              
+              // Campo email (bloqueado)
+              TextField(
+                controller: TextEditingController(text: widget.email),
+                enabled: false,
+                style: const TextStyle(color: Color(0xFF9CA3AF)),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: const TextStyle(color: Color(0xFF6B7280)),
+                  filled: true,
+                  fillColor: const Color(0xFF111114),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF374151),
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               
               // Campo senha
               TextField(
@@ -246,7 +253,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 controller: nameController,
                 style: const TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Nome completo (opcional)',
+                  labelText: 'Nome (opcional)',
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -295,6 +302,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              
+              // Texto de campos obrigatórios - MOVIDO PARA ANTES DO BOTÃO
+              const Text(
+                '* Campos obrigatórios',
+                style: TextStyle(
+                  color: Color(0xFF9CA3AF),
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 24),
               
               // Botão criar conta
@@ -318,17 +336,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           Icon(Icons.arrow_forward),
                         ],
                       ),
-              ),
-              const SizedBox(height: 16),
-              
-              // Texto de campos obrigatórios
-              const Text(
-                '* Campos obrigatórios',
-                style: TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
             ],
