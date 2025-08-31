@@ -109,6 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Verifica se deve mostrar botão Google (apenas Android e Web)
+  bool get _shouldShowGoogleButton {
+    if (kIsWeb) return true; // Web: sempre mostrar
+    return !Platform.isIOS; // Mobile: mostrar apenas se NÃO for iOS
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
@@ -127,23 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 40),
               Center(
-                child: Container(
+                child: Image.asset(
+                  'assets/logo_FE1F80.png',
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF27272A),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Logo',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF9CA3AF),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -166,47 +159,54 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
-              ElevatedButton.icon(
-                onPressed: _loading ? null : () => _loginWithGoogle(auth),
-                icon: Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png',
-                  height: 24,
-                  width: 24,
-                ),
-                label: const Text('Continue com Google'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF1F5F9),
-                  foregroundColor: const Color(0xFF1E293B),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+              
+              // Botão Google - só aparece no Android e Web
+              if (_shouldShowGoogleButton) ...[
+                ElevatedButton.icon(
+                  onPressed: _loading ? null : () => _loginWithGoogle(auth),
+                  icon: Image.network(
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png',
+                    height: 24,
+                    width: 24,
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-              const SizedBox(height: 32),
-              const Row(
-                children: [
-                  Expanded(
-                    child: Divider(color: Color(0xFF27272A)),
+                  label: const Text('Continue com Google'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF1F5F9),
+                    foregroundColor: const Color(0xFF1E293B),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: const BorderSide(color: Color(0xFFE2E8F0)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'ou',
-                      style: TextStyle(
-                        color: Color(0xFF9CA3AF),
-                        fontWeight: FontWeight.w500,
+                ),
+                const SizedBox(height: 32),
+                
+                // Divisor "ou" - só aparece quando tem botão Google
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Divider(color: Color(0xFF27272A)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'ou',
+                        style: TextStyle(
+                          color: Color(0xFF9CA3AF),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Divider(color: Color(0xFF27272A)),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
+                    Expanded(
+                      child: Divider(color: Color(0xFF27272A)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+              ],
+              
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
