@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:travelapp_frontend/services/google_sign_in_service.dart'; // <- factory do GoogleSignIn
+import 'dart:io';
 import 'package:travelapp_frontend/config.dart';
+
+// Import condicional corrigido: usa stub apenas para web
+import 'package:travelapp_frontend/web_google_stub.dart'
+    if (dart.library.js_interop) 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? currentUser;
+  
+  // URL base do seu backend - ajuste conforme necessário
+  static const String _baseUrl = 'https://your-backend-url.com/api';
 
   bool get isLoggedIn => currentUser != null;
 
@@ -20,20 +26,30 @@ class AuthController with ChangeNotifier {
     });
   }
 
-  // Verifica se o email existe no backend
+  // Método para verificar se email existe no backend
   Future<bool> checkUserByEmail(String email) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/users/check-email?email=$email'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
 
-      if (response.statusCode == 200) return true;
-      if (response.statusCode == 404) return false;
-
-      throw Exception('Erro ao verificar email: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        // Email existe
+        return true;
+      } else if (response.statusCode == 404) {
+        // Email não existe
+        return false;
+      } else {
+        // Outro erro
+        throw Exception('Erro ao verificar email: ${response.statusCode}');
+      }
     } catch (e) {
       debugPrint('Erro ao verificar email: $e');
+      // Em caso de erro de conexão, você pode decidir o comportamento
+      // Por enquanto, vamos assumir que o email não existe
       rethrow;
     }
   }
@@ -42,18 +58,20 @@ class AuthController with ChangeNotifier {
   Future<String?> signInWithGoogle() async {
     try {
       if (kIsWeb) {
-        // Web: login direto pelo FirebaseAuth popup
+        // Web: usa popup do Firebase diretamente
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         googleProvider.setCustomParameters({'prompt': 'select_account'});
-
-        UserCredential userCredential =
-            await _auth.signInWithPopup(googleProvider);
+        
+        UserCredential userCredential = await _auth.signInWithPopup(googleProvider);
         currentUser = userCredential.user;
         notifyListeners();
         return await currentUser?.getIdToken();
       } else {
-        // Android / iOS: usa factory do GoogleSignInService
-        final GoogleSignInBase googleSignIn = GoogleSignInService.create();
+        // Android / iOS: usa GoogleSignIn
+        final GoogleSignIn googleSignIn = GoogleSignIn(
+          scopes: ['email'],
+        );
+        
         final googleUser = await googleSignIn.signIn();
         if (googleUser == null) return null; // Usuário cancelou
 
@@ -64,8 +82,7 @@ class AuthController with ChangeNotifier {
           accessToken: googleAuth.accessToken,
         );
 
-        UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(credential);
         currentUser = userCredential.user;
         notifyListeners();
         return await currentUser?.getIdToken();
@@ -76,7 +93,7 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Login com email e senha
+  // Login com email e senha (para a tela PasswordLoginScreen)
   Future<String?> signInWithEmail(String email, String password) async {
     try {
       UserCredential cred =
@@ -97,7 +114,7 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Registro com email + dados adicionais
+  // Registro com email e dados adicionais (para a tela CreateAccountScreen)
   Future<String?> registerWithEmailAndData({
     required String email,
     required String password,
@@ -105,15 +122,21 @@ class AuthController with ChangeNotifier {
     String? name,
   }) async {
     try {
-      UserCredential cred =
-          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      // 1. Criar usuário no Firebase
+      UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email: email, 
+        password: password
+      );
 
+      // 2. Atualizar displayName se fornecido
       if (name != null && name.isNotEmpty) {
         await cred.user?.updateDisplayName(name);
       }
 
+      // 3. Enviar email de verificação
       await cred.user?.sendEmailVerification();
-
+      
+      // 4. Salvar dados adicionais no backend
       await _saveUserDataToBackend(
         firebaseUid: cred.user!.uid,
         email: email,
@@ -121,7 +144,9 @@ class AuthController with ChangeNotifier {
         name: name,
       );
 
+      // 5. Fazer logout até verificar email
       await _auth.signOut();
+      
       return 'Conta criada! Verifique seu email antes de fazer login.';
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -130,7 +155,7 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Salva dados do usuário no backend
+  // Método privado para salvar dados do usuário no backend
   Future<void> _saveUserDataToBackend({
     required String firebaseUid,
     required String email,
@@ -139,8 +164,10 @@ class AuthController with ChangeNotifier {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/users/create'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('$_baseUrl/users/create'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode({
           'firebase_uid': firebaseUid,
           'email': email,
@@ -154,10 +181,12 @@ class AuthController with ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Erro ao salvar usuário no backend: $e');
+      // Por enquanto não vamos falhar o cadastro se o backend falhar
+      // Você pode decidir como tratar isso
     }
   }
 
-  // Reset de senha
+  // Método para recuperar senha
   Future<String?> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -169,10 +198,10 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Logout
   Future<void> signOut() async {
     if (!kIsWeb) {
-      final GoogleSignInBase googleSignIn = GoogleSignInService.create();
+      // Só faz logout do GoogleSignIn em mobile
+      final GoogleSignIn googleSignIn = GoogleSignIn();
       await googleSignIn.signOut();
     }
     await _auth.signOut();
