@@ -12,10 +12,12 @@ class GoogleSignIn {
 }
 
 class GoogleSignInAccount {
-  Future<GoogleSignInAuthentication> authentication() async {
-    throw UnimplementedError();
+  Future<GoogleSignInAuthentication> get authentication async {
+    throw UnimplementedError(
+        'Use FirebaseAuth.signInWithPopup no web para login Google.');
   }
 }
+
 
 class GoogleSignInAuthentication {
   String? get idToken => null;
