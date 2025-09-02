@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:travelapp_frontend/config.dart';
-
-// Import condicional corrigido: usa stub apenas para web
-import 'package:travelapp_frontend/web_google_stub.dart'
-    if (dart.library.js_interop) 'package:google_sign_in/google_sign_in.dart';
+import 'package:travelapp_frontend/services/google_signin_service.dart';
 
 class AuthController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -54,39 +50,15 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Login com Google
+  // Login com Google - agora usando o service
   Future<String?> signInWithGoogle() async {
     try {
-      if (kIsWeb) {
-        // Web: usa popup do Firebase diretamente
-        GoogleAuthProvider googleProvider = GoogleAuthProvider();
-        googleProvider.setCustomParameters({'prompt': 'select_account'});
-        
-        UserCredential userCredential = await _auth.signInWithPopup(googleProvider);
-        currentUser = userCredential.user;
+      final token = await GoogleSignInService.signInWithGoogle(_auth);
+      if (token != null) {
+        currentUser = _auth.currentUser;
         notifyListeners();
-        return await currentUser?.getIdToken();
-      } else {
-        // Android / iOS: usa GoogleSignIn
-        final GoogleSignIn googleSignIn = GoogleSignIn(
-          scopes: ['email'],
-        );
-        
-        final googleUser = await googleSignIn.signIn();
-        if (googleUser == null) return null; // Usuário cancelou
-
-        final googleAuth = await googleUser.authentication;
-
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
-
-        UserCredential userCredential = await _auth.signInWithCredential(credential);
-        currentUser = userCredential.user;
-        notifyListeners();
-        return await currentUser?.getIdToken();
       }
+      return token;
     } catch (e) {
       debugPrint('Erro ao fazer login com Google: $e');
       rethrow;
@@ -199,11 +171,7 @@ class AuthController with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    if (!kIsWeb) {
-      // Só faz logout do GoogleSignIn em mobile
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      await googleSignIn.signOut();
-    }
+    await GoogleSignInService.signOut();
     await _auth.signOut();
     currentUser = null;
     notifyListeners();
