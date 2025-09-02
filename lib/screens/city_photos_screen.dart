@@ -28,7 +28,7 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
 
   Future<void> fetchPhotos() async {
     try {
-      final data = await ApiService.fetchPhotosByCityId(widget.city.id);  // Ajuste para usar city.id
+      final data = await ApiService.fetchPhotosByCityId(widget.city.id);
       setState(() {
         photos = data;
       });
@@ -46,12 +46,22 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
   @override
   Widget build(BuildContext context) {
     final locale = Provider.of<LocaleController>(context).locale;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Configurações do grid
+    final crossAxisCount = 2;
+    final spacing = 8.0;
+
+    // Calculando largura e altura dos cards para proporção 3x4 (vertical)
+    final cardWidth = (screenWidth - ((crossAxisCount + 1) * spacing)) / crossAxisCount;
+    final cardHeight = cardWidth * 4 / 3;
+    final childAspectRatio = cardWidth / cardHeight; // 0.75
 
     return Scaffold(
       appBar: CustomAppBar(
-        city: widget.city,  // Passando o objeto city completo
-        locale: locale,     // Passando o locale atual
-        title: null,        // Passando null para usar o translatedName da cidade
+        city: widget.city,
+        locale: locale,
+        title: null,
       ),
       bottomNavigationBar: CustomBottomBar(),
       body: Container(
@@ -59,12 +69,12 @@ class _CityPhotosScreenState extends State<CityPhotosScreen> {
         child: photos.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : GridView.builder(
-                padding: const EdgeInsets.all(8),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1.0,
+                padding: EdgeInsets.all(spacing),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: spacing,
+                  mainAxisSpacing: spacing,
+                  childAspectRatio: childAspectRatio,
                 ),
                 itemCount: photos.length,
                 itemBuilder: (context, index) {
