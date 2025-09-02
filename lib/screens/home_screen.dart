@@ -4,11 +4,11 @@ import 'package:travelapp_frontend/widgets/city_card.dart';
 import 'package:travelapp_frontend/widgets/home_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/models/city.dart';
-import 'package:travelapp_frontend/screens/city_search_screen.dart'; // Importando a nova tela de pesquisa
-import 'package:travelapp_frontend/screens/city_photos_screen.dart'; // Importando CityPhotosScreen
-import 'package:travelapp_frontend/generated/app_localizations.dart'; // Adicionando o arquivo de localizações
-import 'package:travelapp_frontend/controllers/locale_controller.dart'; // Importando LocaleController
-import 'package:provider/provider.dart'; // Para usar o provider
+import 'package:travelapp_frontend/screens/city_search_screen.dart';
+import 'package:travelapp_frontend/screens/city_photos_screen.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
+import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,10 +20,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<City> cities = [];
 
-  // Função para carregar cidades com as traducoes
   Future<void> fetchCities() async {
     try {
-      final data = await ApiService.fetchCities(); // Sem passar idioma
+      final data = await ApiService.fetchCities();
       setState(() {
         cities = data;
       });
@@ -35,18 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchCities();  // Carregando as cidades logo ao iniciar
+    fetchCities();
   }
 
   @override
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
-    final currentLocale = localeController.locale;  // Pegando o idioma atual
+    final currentLocale = localeController.locale;
     String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city...';
+
+    // Calculando childAspectRatio baseado na largura da tela
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = 3; // 3 cards por linha
+    final spacing = 8 * (crossAxisCount + 1); // espaçamento total entre cards
+    final cardWidth = (screenWidth - spacing) / crossAxisCount;
+    final cardHeight = cardWidth * 1.15; // proporção ligeiramente maior
+    final dynamicAspectRatio = cardWidth / cardHeight;
 
     return Scaffold(
       appBar: HomeAppBar(
-        onLocaleChange: localeController.setLocale, // Passando a função que altera o locale
+        onLocaleChange: localeController.setLocale,
       ),
       body: Container(
         color: const Color(0xFF262626),
@@ -61,13 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                       builder: (context) => CitySearchScreen(
                         cities: cities,
-                        onLocaleChange: localeController.setLocale,  // Passando a função onLocaleChange
+                        onLocaleChange: localeController.setLocale,
                       ),
                     ),
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -76,38 +83,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          searchCityText,  // Usando o texto traduzido
+                          searchCityText,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.7),
                             fontSize: 16,
                           ),
                         ),
                       ),
-                      Icon(Icons.search, color: Colors.white),
+                      const Icon(Icons.search, color: Colors.white),
                     ],
                   ),
                 ),
               ),
             ),
-            // Exibindo cidades
             Expanded(
               child: cities.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : GridView.builder(
                       padding: const EdgeInsets.all(8),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
-                        childAspectRatio: 1.0,
+                        childAspectRatio: dynamicAspectRatio,
                       ),
                       itemCount: cities.length,
                       itemBuilder: (context, index) {
                         final city = cities[index];
-                        // Pegando o nome traduzido ou fallback para o nome original
                         final cityName = city.translations[currentLocale.languageCode] ?? city.name;
-
-                        print('cityName: $cityName');
 
                         return GestureDetector(
                           onTap: () {
@@ -123,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CityCard(
                             imageUrl: city.coverPhotoUrl,
-                            cityName: cityName, // Usando o nome traduzido ou o padrão
+                            cityName: cityName,
                           ),
                         );
                       },
