@@ -44,24 +44,67 @@ class AuthController with ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Erro ao verificar email: $e');
-      // Em caso de erro de conexão, você pode decidir o comportamento
-      // Por enquanto, vamos assumir que o email não existe
       rethrow;
     }
   }
 
-  // Login com Google - agora usando o service
+  // Login/Cadastro com Google - agora trata ambos os casos
   Future<String?> signInWithGoogle() async {
     try {
       final token = await GoogleSignInService.signInWithGoogle(_auth);
+      
       if (token != null) {
         currentUser = _auth.currentUser;
+        
+        // Verifica se é um usuário novo (primeiro login)
+        final isNewUser = await _checkIfUserIsNew();
+        
+        if (isNewUser) {
+          // É cadastro: salva no backend
+          await _handleNewGoogleUser();
+          debugPrint('Novo usuário cadastrado via Google');
+        } else {
+          // É login normal
+          debugPrint('Login existente via Google');
+        }
+        
         notifyListeners();
       }
       return token;
     } catch (e) {
-      debugPrint('Erro ao fazer login com Google: $e');
+      debugPrint('Erro ao fazer login/cadastro com Google: $e');
       rethrow;
+    }
+  }
+
+  // Verifica se usuário é novo no seu backend
+  Future<bool> _checkIfUserIsNew() async {
+    if (currentUser?.email == null) return false;
+    
+    try {
+      final userExists = await checkUserByEmail(currentUser!.email!);
+      return !userExists; // Se não existe = é novo
+    } catch (e) {
+      debugPrint('Erro ao verificar se usuário é novo: $e');
+      return false; // Em caso de erro, assume que já existe
+    }
+  }
+
+  // Trata usuário novo que se cadastrou via Google
+  Future<void> _handleNewGoogleUser() async {
+    if (currentUser == null) return;
+    
+    try {
+      await _saveUserDataToBackend(
+        firebaseUid: currentUser!.uid,
+        email: currentUser!.email!,
+        name: currentUser!.displayName,
+        // Username pode ser gerado automaticamente ou deixado null
+        username: null,
+      );
+    } catch (e) {
+      debugPrint('Erro ao salvar novo usuário Google no backend: $e');
+      // Não falha o login se o backend falhar
     }
   }
 
@@ -154,7 +197,6 @@ class AuthController with ChangeNotifier {
     } catch (e) {
       debugPrint('Erro ao salvar usuário no backend: $e');
       // Por enquanto não vamos falhar o cadastro se o backend falhar
-      // Você pode decidir como tratar isso
     }
   }
 
