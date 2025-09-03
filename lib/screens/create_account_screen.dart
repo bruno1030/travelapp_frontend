@@ -311,7 +311,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   color: Color(0xFF9CA3AF),
                   fontSize: 14,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
               ),
               const SizedBox(height: 24),
               
