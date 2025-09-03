@@ -9,20 +9,18 @@ import 'package:travelapp_frontend/services/google_signin_service.dart';
 class AuthController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? currentUser;
-  
-  // URL base do seu backend - ajuste conforme necessário
-  static const String _baseUrl = 'https://your-backend-url.com/api';
 
   bool get isLoggedIn => currentUser != null;
 
   void init() {
     _auth.authStateChanges().listen((user) {
       currentUser = user;
+      debugPrint('Auth state changed. Current user: ${user?.uid}');
       notifyListeners();
     });
   }
 
-  // Método para verificar se email existe no backend
+  // Verifica se email existe no backend
   Future<bool> checkUserByEmail(String email) async {
     try {
       final response = await http.get(
@@ -32,14 +30,13 @@ class AuthController with ChangeNotifier {
         },
       );
 
+      debugPrint('checkUserByEmail response: ${response.statusCode} ${response.body}');
+
       if (response.statusCode == 200) {
-        // Email existe
         return true;
       } else if (response.statusCode == 404) {
-        // Email não existe
         return false;
       } else {
-        // Outro erro
         throw Exception('Erro ao verificar email: ${response.statusCode}');
       }
     } catch (e) {
@@ -48,67 +45,74 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Login/Cadastro com Google - agora trata ambos os casos
+  // Login/Cadastro com Google
   Future<String?> signInWithGoogle() async {
     try {
       final token = await GoogleSignInService.signInWithGoogle(_auth);
-      
+
       if (token != null) {
         currentUser = _auth.currentUser;
-        
-        // Verifica se é um usuário novo (primeiro login)
+        debugPrint('Google sign-in successful. UID: ${currentUser?.uid}, ID Token: $token');
+
+        // Verifica se é um usuário novo no backend
         final isNewUser = await _checkIfUserIsNew();
-        
+        debugPrint('Is new user in backend? $isNewUser');
+
         if (isNewUser) {
-          // É cadastro: salva no backend
           await _handleNewGoogleUser();
           debugPrint('Novo usuário cadastrado via Google');
         } else {
-          // É login normal
           debugPrint('Login existente via Google');
         }
-        
+
         notifyListeners();
       }
+
       return token;
+    } on FirebaseAuthException catch (e) {
+      debugPrint('FirebaseAuthException: ${e.code} - ${e.message}');
+      if (e.code == 'account-exists-with-different-credential') {
+        return 'Essa conta já foi criada com outro método de login. Use esse método para entrar.';
+      }
+      rethrow;
     } catch (e) {
       debugPrint('Erro ao fazer login/cadastro com Google: $e');
       rethrow;
     }
   }
 
-  // Verifica se usuário é novo no seu backend
+  // Verifica se usuário é novo no backend
   Future<bool> _checkIfUserIsNew() async {
     if (currentUser?.email == null) return false;
-    
+
     try {
       final userExists = await checkUserByEmail(currentUser!.email!);
-      return !userExists; // Se não existe = é novo
+      debugPrint('checkIfUserIsNew result: $userExists');
+      return !userExists;
     } catch (e) {
       debugPrint('Erro ao verificar se usuário é novo: $e');
-      return false; // Em caso de erro, assume que já existe
+      return false;
     }
   }
 
   // Trata usuário novo que se cadastrou via Google
   Future<void> _handleNewGoogleUser() async {
     if (currentUser == null) return;
-    
+
     try {
+      debugPrint('Saving new Google user to backend. UID: ${currentUser!.uid}');
       await _saveUserDataToBackend(
-        firebaseUid: currentUser!.uid,
         email: currentUser!.email!,
         name: currentUser!.displayName,
-        // Username pode ser gerado automaticamente ou deixado null
         username: null,
+        provider: "google",
       );
     } catch (e) {
       debugPrint('Erro ao salvar novo usuário Google no backend: $e');
-      // Não falha o login se o backend falhar
     }
   }
 
-  // Login com email e senha (para a tela PasswordLoginScreen)
+  // Login com email e senha
   Future<String?> signInWithEmail(String email, String password) async {
     try {
       UserCredential cred =
@@ -120,16 +124,23 @@ class AuthController with ChangeNotifier {
       }
 
       currentUser = cred.user;
+      debugPrint('Email sign-in successful. UID: ${currentUser?.uid}');
+
+      final idToken = await currentUser?.getIdToken();
+      debugPrint('ID Token for email login: $idToken');
+
       notifyListeners();
-      return await currentUser?.getIdToken();
+      return idToken;
     } on FirebaseAuthException catch (e) {
+      debugPrint('FirebaseAuthException: ${e.code} - ${e.message}');
       return e.message;
     } catch (e) {
+      debugPrint('Erro ao fazer login com email: $e');
       return 'Erro ao fazer login com email.';
     }
   }
 
-  // Registro com email e dados adicionais (para a tela CreateAccountScreen)
+  // Registro com email e dados adicionais
   Future<String?> registerWithEmailAndData({
     required String email,
     required String password,
@@ -137,85 +148,130 @@ class AuthController with ChangeNotifier {
     String? name,
   }) async {
     try {
-      // 1. Criar usuário no Firebase
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
-        email: email, 
-        password: password
+        email: email,
+        password: password,
       );
 
-      // 2. Atualizar displayName se fornecido
       if (name != null && name.isNotEmpty) {
         await cred.user?.updateDisplayName(name);
       }
 
-      // 3. Enviar email de verificação
       await cred.user?.sendEmailVerification();
-      
-      // 4. Salvar dados adicionais no backend
+
+      debugPrint('New user registered with email. UID: ${cred.user?.uid}');
+
       await _saveUserDataToBackend(
-        firebaseUid: cred.user!.uid,
         email: email,
         username: username,
         name: name,
+        provider: "email",
       );
 
-      // 5. Fazer logout até verificar email
       await _auth.signOut();
-      
       return 'Conta criada! Verifique seu email antes de fazer login.';
     } on FirebaseAuthException catch (e) {
+      debugPrint('FirebaseAuthException during registration: ${e.code} - ${e.message}');
       return e.message;
     } catch (e) {
+      debugPrint('Erro ao criar conta: $e');
       return 'Erro ao criar conta: $e';
     }
   }
 
-  // Método privado para salvar dados do usuário no backend
+  // Salvar dados do usuário no backend
   Future<void> _saveUserDataToBackend({
-    required String firebaseUid,
     required String email,
+    required String provider,
     String? username,
     String? name,
   }) async {
     try {
+      final idToken = await _auth.currentUser?.getIdToken();
+      debugPrint('Saving user data to backend. UID: ${currentUser?.uid}, ID Token: $idToken');
+
+      final Map<String, dynamic> body = {
+        'email': email,
+        'provider': provider,
+        if (username != null) 'username': username,
+        if (name != null) 'name': name,
+      };
+
       final response = await http.post(
-        Uri.parse('$_baseUrl/users/create'),
+        Uri.parse('$baseUrl/users/create-from-firebase'),
         headers: {
           'Content-Type': 'application/json',
+          if (idToken != null) 'Authorization': 'Bearer $idToken',
         },
-        body: jsonEncode({
-          'firebase_uid': firebaseUid,
-          'email': email,
-          'username': username,
-          'name': name,
-        }),
+        body: jsonEncode(body),
       );
 
+      debugPrint('Backend response: ${response.statusCode} ${response.body}');
+
       if (response.statusCode != 201) {
-        throw Exception('Erro ao salvar usuário no backend: ${response.statusCode}');
+        throw Exception('Erro ao salvar usuário no backend: ${response.body}');
       }
     } catch (e) {
       debugPrint('Erro ao salvar usuário no backend: $e');
-      // Por enquanto não vamos falhar o cadastro se o backend falhar
     }
   }
 
-  // Método para recuperar senha
+  // Recuperar senha
   Future<String?> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       return 'Email de recuperação enviado! Verifique sua caixa de entrada.';
     } on FirebaseAuthException catch (e) {
+      debugPrint('FirebaseAuthException during password reset: ${e.code} - ${e.message}');
       return e.message;
     } catch (e) {
+      debugPrint('Erro ao enviar email de recuperação: $e');
       return 'Erro ao enviar email de recuperação.';
     }
   }
 
+  // Logout
   Future<void> signOut() async {
     await GoogleSignInService.signOut();
     await _auth.signOut();
+    debugPrint('User signed out. UID before clearing: ${currentUser?.uid}');
     currentUser = null;
     notifyListeners();
   }
+
+  // Obtém o usuário atual do backend usando idToken
+  Future<Map<String, dynamic>?> getCurrentUserFromBackend() async {
+    try {
+      final idToken = await _auth.currentUser?.getIdToken();
+      debugPrint('Getting current user from backend. UID: ${currentUser?.uid}, ID Token: $idToken');
+
+      if (idToken == null) {
+        debugPrint('No ID Token available.');
+        return null;
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/current'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        },
+      );
+
+      debugPrint('Backend /users/current response: ${response.statusCode} ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        debugPrint('Current user data: $data');
+        return data;
+      } else {
+        debugPrint('Failed to fetch current user. Status: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Erro ao obter usuário atual do backend: $e');
+      return null;
+    }
+  }
+
 }
