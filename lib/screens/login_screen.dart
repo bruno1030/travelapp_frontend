@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 32),
               const Text(
-                'Bem-vindo de volta 👋',
+                'Bem-vindo!',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entre ou crie sua conta rapidamente',
+                'Entre ou crie sua conta',
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF9CA3AF),
