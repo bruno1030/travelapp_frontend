@@ -1,42 +1,61 @@
 // lib/widgets/city_card.dart
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class CityCard extends StatelessWidget {
   final String imageUrl;
   final String cityName;
 
-  CityCard({required this.imageUrl, required this.cityName});
+  const CityCard({
+    Key? key,
+    required this.imageUrl,
+    required this.cityName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
+      color: Colors.transparent, // remove fundo branco
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.hardEdge, // imagem respeita o borderRadius
       child: Stack(
         children: [
-          // A imagem da cidade como fundo
+          // Imagem da cidade
           Image.network(
             imageUrl,
-            fit: BoxFit.cover,  // A imagem vai preencher o espaço do card
-            height: 200,  // Definindo uma altura para a imagem
-            width: double.infinity,  // Para a imagem ocupar toda a largura do card
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-          // O nome da cidade sobre a imagem
+
+          // Nome da cidade dentro de uma caixinha
           Positioned(
-            bottom: 10,  // Colocando o nome no fundo da imagem
+            bottom: 10,
             left: 10,
-            right: 10,
             child: Container(
-              color: Colors.black.withOpacity(0.5),  // Cor de fundo semi-transparente
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.6), // cinza claro translúcido
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Text(
                 cityName,
-                style: TextStyle(
-                  fontFamily: 'NotoSans',  // Usando a fonte customizada
-                  color: Colors.white,  // Cor do texto
-                  fontSize: 16,         // Tamanho da fonte
-                  fontWeight: FontWeight.bold,  // Deixar o nome em negrito
+                style: const TextStyle(
+                  fontFamily: 'NotoSans',
+                  color: Colors.white,
+                  fontSize: 16, // fonte maior
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 2,
+                      color: Colors.black45,
+                    ),
+                  ],
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),

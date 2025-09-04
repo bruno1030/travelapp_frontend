@@ -41,14 +41,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
     final currentLocale = localeController.locale;
-    String searchCityText = AppLocalizations.of(context)?.search_city ?? 'Search a city...';
+    String searchCityText =
+        AppLocalizations.of(context)?.search_city ?? 'Search a city...';
 
     // Calculando childAspectRatio baseado na largura da tela
     final screenWidth = MediaQuery.of(context).size.width;
-    final crossAxisCount = 3; // 3 cards por linha
+    final crossAxisCount = 2; // 2 cards por linha
     final spacing = 8 * (crossAxisCount + 1); // espaçamento total entre cards
     final cardWidth = (screenWidth - spacing) / crossAxisCount;
-    final cardHeight = cardWidth * 1.15; // proporção ligeiramente maior
+    // deixa os cards mais altos que largos
+    final cardHeight = cardWidth * 1.4;
     final dynamicAspectRatio = cardWidth / cardHeight;
 
     return Scaffold(
@@ -74,7 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -110,7 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: cities.length,
                       itemBuilder: (context, index) {
                         final city = cities[index];
-                        final cityName = city.translations[currentLocale.languageCode] ?? city.name;
+                        final cityName = city
+                                .translations[currentLocale.languageCode] ??
+                            city.name;
 
                         return GestureDetector(
                           onTap: () {
