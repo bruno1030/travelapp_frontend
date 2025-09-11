@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
+import 'profile_screen.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String email;
-  
+
   const PasswordLoginScreen({super.key, required this.email});
 
   @override
@@ -24,7 +25,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
 
   Future<void> _signIn(AuthController auth) async {
     final password = passwordController.text.trim();
-    
+
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, digite sua senha')),
@@ -47,8 +48,14 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login realizado com sucesso!')),
       );
-      // Navegar para home ou fechar telas de login
-      Navigator.of(context).popUntil((route) => route.isFirst);
+
+      // Redireciona para ProfileScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ProfileScreen(),
+        ),
+      );
     } else {
       // Token é mensagem de erro
       ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +66,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
 
   Future<void> _forgotPassword(AuthController auth) async {
     final result = await auth.resetPassword(widget.email);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result ?? 'Erro ao enviar email')),
