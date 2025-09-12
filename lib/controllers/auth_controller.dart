@@ -10,6 +10,9 @@ class AuthController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? currentUser;
 
+  String? backendName;
+  String? backendUsername;
+
   bool get isLoggedIn => currentUser != null;
 
   void init() {
@@ -271,6 +274,17 @@ class AuthController with ChangeNotifier {
     } catch (e) {
       debugPrint('Erro ao obter usuário atual do backend: $e');
       return null;
+    }
+  }
+
+  /// Novo método: busca do backend e atualiza os campos name e username
+  Future<void> fetchAndSetUserData() async {
+    final data = await getCurrentUserFromBackend();
+    if (data != null) {
+      backendName = data['name'] as String?;
+      backendUsername = data['username'] as String?;
+      debugPrint('Fetched user data: name=$backendName, username=$backendUsername');
+      notifyListeners();
     }
   }
 

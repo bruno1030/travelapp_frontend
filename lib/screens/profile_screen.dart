@@ -16,25 +16,63 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _usernameController;
   late TextEditingController _nameController;
+  late TextEditingController _emailController;
   bool _isEditing = false;
+  bool _isLoading = true;
+
+  // Para restaurar valores originais se cancelar
+  String _originalName = "";
+  String _originalUsername = "";
 
   @override
   void initState() {
     super.initState();
     final auth = Provider.of<AuthController>(context, listen: false);
-    _usernameController = TextEditingController(
-      text: auth.currentUser?.displayName ?? "",
-    );
-    _nameController = TextEditingController(
-      text: auth.currentUser?.displayName ?? "",
-    );
+
+    _nameController = TextEditingController();
+    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await auth.fetchAndSetUserData();
+      setState(() {
+        _nameController.text = auth.backendName ?? "";
+        _usernameController.text = auth.backendUsername ?? "";
+        _emailController.text = auth.currentUser?.email ?? "";
+        _originalName = _nameController.text;
+        _originalUsername = _usernameController.text;
+        _isLoading = false;
+      });
+    });
   }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _nameController.dispose();
+    _emailController.dispose();
     super.dispose();
+  }
+
+  void _cancelEditing() {
+    setState(() {
+      _isEditing = false;
+      _nameController.text = _originalName;
+      _usernameController.text = _originalUsername;
+    });
+  }
+
+  void _saveEditing() {
+    setState(() {
+      _isEditing = false;
+      _originalName = _nameController.text;
+      _originalUsername = _usernameController.text;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Changes saved (mock only)"),
+      ),
+    );
   }
 
   @override
@@ -42,12 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final auth = Provider.of<AuthController>(context);
     final locale = Provider.of<LocaleController>(context).locale;
 
-    // Se o usuário não estiver logado, redireciona para a tela de login.
     if (!auth.isLoggedIn) {
       return const LoginScreen();
     }
-
-    final user = auth.currentUser;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -55,144 +90,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
         locale: locale,
         title: "Profile",
       ),
-      bottomNavigationBar: CustomBottomBar(),
-      body: Container(
-        color: const Color(0xFF262626),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              color: Colors.grey[900],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: const CustomBottomBar(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              color: const Color(0xFF262626),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    color: Colors.grey[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                    child: Stack(
                       children: [
-                        const Text(
-                          "User Info",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "User Info",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (!_isEditing)
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.white70,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isEditing = true;
+                                        });
+                                      },
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              TextField(
+                                controller: _nameController,
+                                enabled: _isEditing,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  labelText: "Name",
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  labelStyle: const TextStyle(color: Colors.white70),
+                                  filled: true,
+                                  fillColor: Colors.grey[850],
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              TextField(
+                                controller: _usernameController,
+                                enabled: _isEditing,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  labelText: "Username",
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  labelStyle: const TextStyle(color: Colors.white70),
+                                  filled: true,
+                                  fillColor: Colors.grey[850],
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              TextField(
+                                controller: _emailController,
+                                enabled: false,
+                                style: const TextStyle(color: Colors.white70),
+                                decoration: InputDecoration(
+                                  labelText: "Email",
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  labelStyle: const TextStyle(color: Colors.white70),
+                                  filled: true,
+                                  fillColor: Colors.grey[850],
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 60), // espaço reservado para os botões
+                            ],
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            _isEditing ? Icons.close : Icons.edit,
-                            color: Colors.white70,
+                        // Botões fixos na parte inferior do card
+                        Positioned(
+                          bottom: 16,
+                          right: 16,
+                          child: Visibility(
+                            visible: _isEditing,
+                            child: Row(
+                              children: [
+                                TextButton(
+                                  onPressed: _cancelEditing,
+                                  child: const Text(
+                                    "Cancel",
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blueAccent,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 14, horizontal: 24),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: _saveEditing,
+                                  child: const Text(
+                                    'Save',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isEditing = !_isEditing;
-                            });
-                          },
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Email: ${user?.email ?? "N/A"}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[800],
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'UID: ${user?.uid ?? "N/A"}',
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
+                    onPressed: () async {
+                      await auth.signOut();
+                    },
+                    child: const Text(
+                      'Logout',
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _nameController,
-                      enabled: _isEditing,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        labelStyle: const TextStyle(color: Colors.white70),
-                        filled: true,
-                        fillColor: Colors.grey[850],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _usernameController,
-                      enabled: _isEditing,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        labelText: "Username",
-                        labelStyle: const TextStyle(color: Colors.white70),
-                        filled: true,
-                        fillColor: Colors.grey[850],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    if (_isEditing) ...[
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isEditing = false;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Changes saved (mock only)"),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            const Spacer(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[800],
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () async {
-                await auth.signOut();
-              },
-              child: const Text(
-                'Logout',
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
