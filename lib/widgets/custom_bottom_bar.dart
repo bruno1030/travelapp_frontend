@@ -11,6 +11,7 @@ import 'package:travelapp_frontend/controllers/auth_controller.dart';
 import 'package:travelapp_frontend/screens/home_screen.dart';
 import 'package:travelapp_frontend/screens/profile_screen.dart';
 import 'package:travelapp_frontend/services/api_service.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar({super.key});
@@ -19,6 +20,10 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
     final auth = Provider.of<AuthController>(context);
+
+    String homeString = AppLocalizations.of(context)?.home ?? 'Home';
+    String postPhotoString = AppLocalizations.of(context)?.post_photo ?? 'Post Photo';
+    String profileString = AppLocalizations.of(context)?.profile ?? 'Profile';
 
     return BottomAppBar(
       color: const Color(0xFF020202),
@@ -29,7 +34,7 @@ class CustomBottomBar extends StatelessWidget {
           children: [
             _BottomBarItem(
               icon: Icons.home,
-              label: 'Home',
+              label: homeString,
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -40,14 +45,14 @@ class CustomBottomBar extends StatelessWidget {
             ),
             _BottomBarItem(
               icon: Icons.upload_file,
-              label: 'Upload Photo',
+              label: postPhotoString,
               onTap: () async {
                 await _handleUploadPhoto(context);
               },
             ),
             _BottomBarItem(
               icon: Icons.person,
-              label: 'Profile',
+              label: profileString,
               onTap: () {
                 Navigator.push(
                   context,

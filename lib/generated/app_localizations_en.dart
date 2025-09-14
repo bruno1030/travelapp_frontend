@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hello => 'Hello';
 
   @override
-  String get welcome => 'Welcome to Clixpot!';
+  String get welcome => 'Welcome !';
 
   @override
   String get about_us => 'About us';

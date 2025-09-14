@@ -12,7 +12,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hello => 'Bonjour';
 
   @override
-  String get welcome => 'Bienvenue sur Clixpot !';
+  String get welcome => 'Bienvenue !';
 
   @override
   String get about_us => 'À propos de nous';
@@ -36,56 +36,56 @@ class AppLocalizationsFr extends AppLocalizations {
   String get close => 'Fermer';
 
   @override
-  String get take_me_there => 'Emmène-moi là-bas !';
+  String get take_me_there => 'Emmène-moi là-bas!';
 
   @override
   String get explore_cities => 'Explorer les villes';
 
   @override
-  String get home => 'Home';
+  String get home => 'Accueil';
 
   @override
-  String get post_photo => 'Post Photo';
+  String get post_photo => 'Publier une photo';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Profil';
 
   @override
-  String get continue_with_google => 'Continue with Google';
+  String get continue_with_google => 'Continuer avec Google';
 
   @override
-  String get continue_string => 'Continue';
+  String get continue_string => 'Continuer';
 
   @override
-  String get or => 'or';
+  String get or => 'ou';
 
   @override
   String get email => 'Email';
 
   @override
-  String get create_account => 'Create account';
+  String get create_account => 'Créer un compte';
 
   @override
-  String get password => 'Password';
+  String get password => 'Mot de passe';
 
   @override
-  String get confirm_your_password => 'Confirm your password';
+  String get confirm_your_password => 'Confirmez votre mot de passe';
 
   @override
-  String get name_optional => 'Name (optional)';
+  String get name_optional => 'Nom (optionnel)';
 
   @override
-  String get username_optional => 'Username (optional)';
+  String get username_optional => 'Nom d\'utilisateur (optionnel)';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nom';
 
   @override
-  String get username => 'Username';
+  String get username => 'Nom d\'utilisateur';
 
   @override
-  String get mandatory_fields => '* Mandatory fields';
+  String get mandatory_fields => '* Champs obligatoires';
 
   @override
-  String get forgot_your_password => 'Forgot your password?';
+  String get forgot_your_password => 'Mot de passe oublié?';
 }

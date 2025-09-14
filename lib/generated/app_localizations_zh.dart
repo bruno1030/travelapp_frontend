@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hello => '你好';
 
   @override
-  String get welcome => '欢迎使用Clixpot!';
+  String get welcome => '欢迎 !';
 
   @override
   String get about_us => '关于我们';
@@ -27,7 +27,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get language_name => '中文';
 
   @override
-  String get clickhunt_version => 'Clixpot 版本1.0';
+  String get clickhunt_version => 'Clixpot v1.0';
 
   @override
   String get developed_by => '由 Bruno Martins 开发';
@@ -42,50 +42,50 @@ class AppLocalizationsZh extends AppLocalizations {
   String get explore_cities => '探索城市';
 
   @override
-  String get home => 'Home';
+  String get home => '首页';
 
   @override
-  String get post_photo => 'Post Photo';
+  String get post_photo => '上传照片';
 
   @override
-  String get profile => 'Profile';
+  String get profile => '个人资料';
 
   @override
-  String get continue_with_google => 'Continue with Google';
+  String get continue_with_google => '使用 Google 继续';
 
   @override
-  String get continue_string => 'Continue';
+  String get continue_string => '继续';
 
   @override
-  String get or => 'or';
+  String get or => '或';
 
   @override
-  String get email => 'Email';
+  String get email => '电子邮件';
 
   @override
-  String get create_account => 'Create account';
+  String get create_account => '创建账户';
 
   @override
-  String get password => 'Password';
+  String get password => '密码';
 
   @override
-  String get confirm_your_password => 'Confirm your password';
+  String get confirm_your_password => '确认密码';
 
   @override
-  String get name_optional => 'Name (optional)';
+  String get name_optional => '姓名（可选）';
 
   @override
-  String get username_optional => 'Username (optional)';
+  String get username_optional => '用户名（可选）';
 
   @override
-  String get name => 'Name';
+  String get name => '姓名';
 
   @override
-  String get username => 'Username';
+  String get username => '用户名';
 
   @override
-  String get mandatory_fields => '* Mandatory fields';
+  String get mandatory_fields => '* 必填字段';
 
   @override
-  String get forgot_your_password => 'Forgot your password?';
+  String get forgot_your_password => '忘记密码？';
 }
