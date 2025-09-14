@@ -9,5 +9,21 @@
   "developed_by": "Developed by Bruno Martins",
   "close": "Close",
   "take_me_there": "Take me there!",
-  "explore_cities": "Explore Cities"
+  "explore_cities": "Explore Cities",
+  "home": "Home",
+  "post_photo": "Post Photo",
+  "profile": "Profile",
+  "continue_with_google": "Continue with Google",
+  "continue_string": "Continue",
+  "or": "or",
+  "email": "Email",
+  "create_account": "Create account",
+  "password": "Password",
+  "confirm_your_password": "Confirm your password",  
+  "name_optional": "Name (optional)",
+  "username_optional": "Username (optional)",
+  "name": "Name",
+  "username": "Username",
+  "mandatory_fields": "* Mandatory fields",
+  "forgot_your_password": "Forgot your password?"
 }
