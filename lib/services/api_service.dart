@@ -108,7 +108,7 @@ class ApiService {
           "image_url": secureUrl,
           "latitude": latitude,
           "longitude": longitude,
-          "user_id": 1
+          "user_id": 3
         }),
       );
 

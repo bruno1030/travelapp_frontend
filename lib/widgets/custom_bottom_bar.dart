@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,19 +49,10 @@ class CustomBottomBar extends StatelessWidget {
               icon: Icons.person,
               label: 'Profile',
               onTap: () {
-                if (auth.isLoggedIn) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProfileScreen(), // Já trata login se não estiver logado
-                    ),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
               },
             ),
           ],
@@ -72,6 +62,7 @@ class CustomBottomBar extends StatelessWidget {
   }
 
   Future<void> _handleUploadPhoto(BuildContext context) async {
+    // Verifica se o serviço de localização está habilitado
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,6 +71,7 @@ class CustomBottomBar extends StatelessWidget {
       return;
     }
 
+    // Solicita permissões de localização
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -98,45 +90,13 @@ class CustomBottomBar extends StatelessWidget {
       return;
     }
 
+    // Abre a câmera para tirar a foto
     final ImagePicker picker = ImagePicker();
-    XFile? imageFile;
+    XFile? imageFile = await picker.pickImage(source: ImageSource.camera);
 
-    bool takeAnother = true;
+    if (imageFile == null) return; // Usuário cancelou a câmera
 
-    while (takeAnother) {
-      imageFile = await picker.pickImage(source: ImageSource.camera);
-
-      if (imageFile == null) return;
-
-      Widget imageWidget;
-
-      if (kIsWeb) {
-        Uint8List imageBytes = await imageFile.readAsBytes();
-        imageWidget = Image.memory(imageBytes);
-      } else {
-        imageWidget = Image.file(File(imageFile.path));
-      }
-
-      takeAnother = !(await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Confirm Photo'),
-              content: imageWidget,
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Retake Photo'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Confirm'),
-                ),
-              ],
-            ),
-          ) ??
-          false);
-    }
-
+    // Pega a posição atual
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.best,
     );
@@ -148,33 +108,32 @@ class CustomBottomBar extends StatelessWidget {
       ),
     );
 
-    if (imageFile != null) {
-      try {
-        if (kIsWeb) {
-          Uint8List imageBytes = await imageFile.readAsBytes();
-          String fakeFileName =
-              'web_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
-          File fakeFile = File(fakeFileName); // Apenas estrutura, não precisa existir de fato
-          await ApiService.savePhoto(
-            imageFile: fakeFile,
-            imageBytes: imageBytes,
-            latitude: position.latitude,
-            longitude: position.longitude,
-          );
-        } else {
-          File file = File(imageFile.path);
-          await ApiService.savePhoto(
-            imageFile: file,
-            latitude: position.latitude,
-            longitude: position.longitude,
-          );
-        }
-      } catch (e) {
-        debugPrint('Erro ao salvar foto: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao salvar foto: $e')),
+    // Faz upload da foto para o backend
+    try {
+      if (kIsWeb) {
+        Uint8List imageBytes = await imageFile.readAsBytes();
+        String fakeFileName =
+            'web_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        File fakeFile = File(fakeFileName); // Apenas estrutura, não precisa existir de fato
+        await ApiService.savePhoto(
+          imageFile: fakeFile,
+          imageBytes: imageBytes,
+          latitude: position.latitude,
+          longitude: position.longitude,
+        );
+      } else {
+        File file = File(imageFile.path);
+        await ApiService.savePhoto(
+          imageFile: file,
+          latitude: position.latitude,
+          longitude: position.longitude,
         );
       }
+    } catch (e) {
+      debugPrint('Erro ao salvar foto: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao salvar foto: $e')),
+      );
     }
   }
 }

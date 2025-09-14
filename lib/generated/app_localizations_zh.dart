@@ -40,4 +40,52 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get explore_cities => '探索城市';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get post_photo => 'Post Photo';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get continue_with_google => 'Continue with Google';
+
+  @override
+  String get continue_string => 'Continue';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get create_account => 'Create account';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirm_your_password => 'Confirm your password';
+
+  @override
+  String get name_optional => 'Name (optional)';
+
+  @override
+  String get username_optional => 'Username (optional)';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get mandatory_fields => '* Mandatory fields';
+
+  @override
+  String get forgot_your_password => 'Forgot your password?';
 }

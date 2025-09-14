@@ -173,6 +173,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore Cities'**
   String get explore_cities;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @post_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Post Photo'**
+  String get post_photo;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @continue_with_google.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continue_with_google;
+
+  /// No description provided for @continue_string.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_string;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @create_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get create_account;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirm_your_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your password'**
+  String get confirm_your_password;
+
+  /// No description provided for @name_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get name_optional;
+
+  /// No description provided for @username_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Username (optional)'**
+  String get username_optional;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @mandatory_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'* Mandatory fields'**
+  String get mandatory_fields;
+
+  /// No description provided for @forgot_your_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get forgot_your_password;
 }
 
 class _AppLocalizationsDelegate
