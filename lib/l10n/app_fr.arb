@@ -1,6 +1,6 @@
 {
   "hello": "Bonjour",
-  "welcome": "Bienvenue sur Clixpot !",
+  "welcome": "Bienvenue !",
   "about_us": "À propos de nous",
   "language": "Langue",
   "search_city": "Rechercher une ville...",
@@ -8,6 +8,22 @@
   "clickhunt_version": "Clixpot v1.0",
   "developed_by": "Développé par Bruno Martins",
   "close": "Fermer",
-  "take_me_there": "Emmène-moi là-bas !",
-  "explore_cities": "Explorer les villes"
+  "take_me_there": "Emmène-moi là-bas!",
+  "explore_cities": "Explorer les villes",
+  "home": "Accueil",
+  "post_photo": "Publier une photo",
+  "profile": "Profil",
+  "continue_with_google": "Continuer avec Google",
+  "continue_string": "Continuer",
+  "or": "ou",
+  "email": "Email",
+  "create_account": "Créer un compte",
+  "password": "Mot de passe",
+  "confirm_your_password": "Confirmez votre mot de passe",
+  "name_optional": "Nom (optionnel)",
+  "username_optional": "Nom d'utilisateur (optionnel)",
+  "name": "Nom",
+  "username": "Nom d'utilisateur",
+  "mandatory_fields": "* Champs obligatoires",
+  "forgot_your_password": "Mot de passe oublié?"
 }

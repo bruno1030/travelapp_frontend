@@ -5,6 +5,7 @@ import '../controllers/auth_controller.dart';
 import 'password_login_screen.dart';
 import 'create_account_screen.dart';
 import 'dart:io';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -119,6 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
 
+    String continueWithGoogle = AppLocalizations.of(context)?.continue_with_google ?? 'Continue with Google';
+    String or = AppLocalizations.of(context)?.or ?? 'or';
+    String emailString = AppLocalizations.of(context)?.email ?? 'Email';
+    String continueString = AppLocalizations.of(context)?.continue_string ?? 'Continue';
+    String welcome = AppLocalizations.of(context)?.welcome ?? 'Welcome to Clixpot!';
+
     return Scaffold(
       backgroundColor: const Color(0xFF020202),
       appBar: AppBar(
@@ -140,21 +147,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Bem-vindo!',
+              Text(
+                welcome,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFFF9FAFB),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Entre ou crie sua conta',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF9CA3AF),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -169,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 24,
                     width: 24,
                   ),
-                  label: const Text('Continue com Google'),
+                  label: Text(continueWithGoogle),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF1F5F9),
                     foregroundColor: const Color(0xFF1E293B),
@@ -184,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 
                 // Divisor "ou" - só aparece quando tem botão Google
-                const Row(
+                Row(
                   children: [
                     Expanded(
                       child: Divider(color: Color(0xFF27272A)),
@@ -192,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        'ou',
+                        or,
                         style: TextStyle(
                           color: Color(0xFF9CA3AF),
                           fontWeight: FontWeight.w500,
@@ -212,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: emailString,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -246,10 +244,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Continuar'),
+                          Text(continueString),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward),
                         ],

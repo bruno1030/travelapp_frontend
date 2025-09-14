@@ -12,7 +12,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hello => 'こんにちは';
 
   @override
-  String get welcome => 'Clixpotへようこそ!';
+  String get welcome => 'ようこそ !';
 
   @override
   String get about_us => '私たちについて';
@@ -27,65 +27,65 @@ class AppLocalizationsJa extends AppLocalizations {
   String get language_name => '日本語';
 
   @override
-  String get clickhunt_version => 'Clixpot バージョン1.0';
+  String get clickhunt_version => 'Clixpot v1.0';
 
   @override
-  String get developed_by => '開発者: Bruno Martins';
+  String get developed_by => 'ブルーノ・マルティンスによって開発';
 
   @override
   String get close => '閉じる';
 
   @override
-  String get take_me_there => 'そこに連れてって！';
+  String get take_me_there => 'そこへ連れて行って！';
 
   @override
-  String get explore_cities => '都市を探す';
+  String get explore_cities => '都市を探索';
 
   @override
-  String get home => 'Home';
+  String get home => 'ホーム';
 
   @override
-  String get post_photo => 'Post Photo';
+  String get post_photo => '写真を投稿';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'プロフィール';
 
   @override
-  String get continue_with_google => 'Continue with Google';
+  String get continue_with_google => 'Googleで続行';
 
   @override
-  String get continue_string => 'Continue';
+  String get continue_string => '続行';
 
   @override
-  String get or => 'or';
+  String get or => 'または';
 
   @override
-  String get email => 'Email';
+  String get email => 'メール';
 
   @override
-  String get create_account => 'Create account';
+  String get create_account => 'アカウント作成';
 
   @override
-  String get password => 'Password';
+  String get password => 'パスワード';
 
   @override
-  String get confirm_your_password => 'Confirm your password';
+  String get confirm_your_password => 'パスワードを確認';
 
   @override
-  String get name_optional => 'Name (optional)';
+  String get name_optional => '名前（任意）';
 
   @override
-  String get username_optional => 'Username (optional)';
+  String get username_optional => 'ユーザー名（任意）';
 
   @override
-  String get name => 'Name';
+  String get name => '名前';
 
   @override
-  String get username => 'Username';
+  String get username => 'ユーザー名';
 
   @override
-  String get mandatory_fields => '* Mandatory fields';
+  String get mandatory_fields => '* 必須項目';
 
   @override
-  String get forgot_your_password => 'Forgot your password?';
+  String get forgot_your_password => 'パスワードをお忘れですか？';
 }
