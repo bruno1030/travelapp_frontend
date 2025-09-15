@@ -66,10 +66,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get create_account => 'Konto erstellen';
 
   @override
-  String get password => 'Passwort';
+  String get password_as_required => 'Passwort *';
 
   @override
-  String get confirm_your_password => 'Bestätige dein Passwort';
+  String get confirm_your_password_as_required => 'Bestätige dein Passwort *';
 
   @override
   String get name_optional => 'Name (optional)';
@@ -88,4 +88,28 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get forgot_your_password => 'Passwort vergessen?';
+
+  @override
+  String get login_button => 'Anmelden';
+
+  @override
+  String get enter_password_prompt => 'Bitte geben Sie Ihr Passwort ein';
+
+  @override
+  String get enter_password_label => 'Geben Sie Ihr Passwort ein';
+
+  @override
+  String get password_label => 'Passwort';
+
+  @override
+  String get user_info => 'Benutzerinformationen';
+
+  @override
+  String get logout => 'Abmelden';
+
+  @override
+  String get save => 'Speichern';
+
+  @override
+  String get cancel => 'Abbrechen';
 }

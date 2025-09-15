@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   final String email;
@@ -103,6 +104,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
 
+    String createAccount = AppLocalizations.of(context)?.create_account ?? 'Create account';
+    String emailString = AppLocalizations.of(context)?.email ?? 'Email';
+    String passString = AppLocalizations.of(context)?.password_as_required ?? 'Password *';
+    String passConfirmationString = AppLocalizations.of(context)?.confirm_your_password_as_required ?? 'Confirm your password *';
+    String nameOptionalString = AppLocalizations.of(context)?.name_optional ?? 'Name (optional)';
+    String usernameOptionalString = AppLocalizations.of(context)?.username_optional ?? 'Username (optional)';
+    String mandatoryFieldsString = AppLocalizations.of(context)?.mandatory_fields ?? '* Mandatory fields';
+
     return Scaffold(
       backgroundColor: const Color(0xFF020202),
       appBar: AppBar(
@@ -128,8 +137,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Criar conta',
+              Text(
+                createAccount,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -143,9 +152,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextField(
                 controller: TextEditingController(text: widget.email),
                 enabled: false,
-                style: const TextStyle(color: Color(0xFF9CA3AF)),
+                style: TextStyle(color: Color(0xFF9CA3AF)),
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: emailString,
                   labelStyle: const TextStyle(color: Color(0xFF6B7280)),
                   filled: true,
                   fillColor: const Color(0xFF111114),
@@ -172,9 +181,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextField(
                 controller: passwordController,
                 obscureText: _obscurePassword,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                style: TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Senha *',
+                  labelText: passString,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -212,9 +221,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextField(
                 controller: confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                style: TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Confirmar Senha *',
+                  labelText: passConfirmationString,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -251,9 +260,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               // Campo nome (opcional)
               TextField(
                 controller: nameController,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                style: TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Nome (opcional)',
+                  labelText: nameOptionalString,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -279,9 +288,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               // Campo username (opcional)
               TextField(
                 controller: usernameController,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                style: TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Nome de usuário (opcional)',
+                  labelText: usernameOptionalString,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -305,8 +314,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 16),
               
               // Texto de campos obrigatórios - MOVIDO PARA ANTES DO BOTÃO
-              const Text(
-                '* Campos obrigatórios',
+              Text(
+                mandatoryFieldsString,
                 style: TextStyle(
                   color: Color(0xFF9CA3AF),
                   fontSize: 14,
@@ -328,10 +337,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Criar conta'),
+                          Text(createAccount),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward),
                         ],
