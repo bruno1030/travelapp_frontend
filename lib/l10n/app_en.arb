@@ -18,12 +18,20 @@
   "or": "or",
   "email": "Email",
   "create_account": "Create account",
-  "password": "Password",
-  "confirm_your_password": "Confirm your password",  
+  "password_as_required": "Password *",
+  "confirm_your_password_as_required": "Confirm your password *",  
   "name_optional": "Name (optional)",
   "username_optional": "Username (optional)",
   "name": "Name",
   "username": "Username",
   "mandatory_fields": "* Mandatory fields",
-  "forgot_your_password": "Forgot your password?"
+  "forgot_your_password": "Forgot your password?",
+  "login_button": "Sign in",
+  "enter_password_prompt": "Please enter your password",
+  "enter_password_label": "Enter your password",
+  "password_label": "Password",
+  "user_info": "User info",
+  "logout": "Logout",
+  "save": "Save",
+  "cancel": "Cancel"
 }

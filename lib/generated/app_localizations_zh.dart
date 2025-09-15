@@ -66,10 +66,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get create_account => '创建账户';
 
   @override
-  String get password => '密码';
+  String get password_as_required => '密码 *';
 
   @override
-  String get confirm_your_password => '确认密码';
+  String get confirm_your_password_as_required => '确认密码 *';
 
   @override
   String get name_optional => '姓名（可选）';
@@ -88,4 +88,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get forgot_your_password => '忘记密码？';
+
+  @override
+  String get login_button => '登录';
+
+  @override
+  String get enter_password_prompt => '请输入您的密码';
+
+  @override
+  String get enter_password_label => '输入密码';
+
+  @override
+  String get password_label => '密码';
+
+  @override
+  String get user_info => '用户信息';
+
+  @override
+  String get logout => '退出登录';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get cancel => '取消';
 }

@@ -18,12 +18,20 @@
   "or": "或",
   "email": "电子邮件",
   "create_account": "创建账户",
-  "password": "密码",
-  "confirm_your_password": "确认密码",
+  "password_as_required": "密码 *",
+  "confirm_your_password_as_required": "确认密码 *",
   "name_optional": "姓名（可选）",
   "username_optional": "用户名（可选）",
   "name": "姓名",
   "username": "用户名",
   "mandatory_fields": "* 必填字段",
-  "forgot_your_password": "忘记密码？"
+  "forgot_your_password": "忘记密码？",
+  "login_button": "登录",
+  "enter_password_prompt": "请输入您的密码",
+  "enter_password_label": "输入密码",
+  "password_label": "密码",
+  "user_info": "用户信息",
+  "logout": "退出登录",
+  "save": "保存",
+  "cancel": "取消"
 }

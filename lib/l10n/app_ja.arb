@@ -18,12 +18,20 @@
   "or": "または",
   "email": "メール",
   "create_account": "アカウント作成",
-  "password": "パスワード",
-  "confirm_your_password": "パスワードを確認",
+  "password_as_required": "パスワード *",
+  "confirm_your_password_as_required": "パスワードを確認 *",
   "name_optional": "名前（任意）",
   "username_optional": "ユーザー名（任意）",
   "name": "名前",
   "username": "ユーザー名",
   "mandatory_fields": "* 必須項目",
-  "forgot_your_password": "パスワードをお忘れですか？"
+  "forgot_your_password": "パスワードをお忘れですか？",
+  "login_button": "ログイン",
+  "enter_password_prompt": "パスワードを入力してください",
+  "enter_password_label": "パスワードを入力",
+  "password_label": "パスワード",
+  "user_info": "ユーザー情報",
+  "logout": "ログアウト",
+  "save": "保存",
+  "cancel": "キャンセル"
 }

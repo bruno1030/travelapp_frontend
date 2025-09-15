@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import 'profile_screen.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String email;
@@ -26,9 +27,11 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
   Future<void> _signIn(AuthController auth) async {
     final password = passwordController.text.trim();
 
+    String enterPasswordPrompt = AppLocalizations.of(context)?.enter_password_prompt ?? 'Please enter your password';
+
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, digite sua senha')),
+        SnackBar(content: Text(enterPasswordPrompt)),
       );
       return;
     }
@@ -78,6 +81,11 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthController>(context);
 
+    String enterPasswordLabel = AppLocalizations.of(context)?.enter_password_label ?? 'Please enter your password';
+    String passwordLabel = AppLocalizations.of(context)?.password_label ?? 'Password';
+    String forgotYourPasswordString = AppLocalizations.of(context)?.forgot_your_password ?? 'Forgot your password?';
+    String loginButton = AppLocalizations.of(context)?.login_button ?? 'Sign in';
+
     return Scaffold(
       backgroundColor: const Color(0xFF020202),
       appBar: AppBar(
@@ -96,28 +104,15 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
             children: [
               const SizedBox(height: 40),
               Center(
-                child: Container(
+                child: Image.asset(
+                  'assets/logo_FE1F80.png',
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF27272A),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Logo',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF9CA3AF),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Digite sua senha',
+              Text(
+                enterPasswordLabel,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -127,7 +122,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Entre na sua conta ${widget.email}',
+                widget.email,
                 style: const TextStyle(
                   fontSize: 16,
                   color: Color(0xFF9CA3AF),
@@ -138,9 +133,9 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               TextField(
                 controller: passwordController,
                 obscureText: _obscurePassword,
-                style: const TextStyle(color: Color(0xFFF9FAFB)),
+                style: TextStyle(color: Color(0xFFF9FAFB)),
                 decoration: InputDecoration(
-                  labelText: 'Senha',
+                  labelText: passwordLabel,
                   labelStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                   filled: true,
                   fillColor: const Color(0xFF18181B),
@@ -185,10 +180,10 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                 ),
                 child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Entrar'),
+                          Text(loginButton),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward),
                         ],
@@ -197,8 +192,8 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               const SizedBox(height: 24),
               TextButton(
                 onPressed: _loading ? null : () => _forgotPassword(auth),
-                child: const Text(
-                  'Esqueceu sua senha?',
+                child: Text(
+                  forgotYourPasswordString,
                   style: TextStyle(
                     color: Color(0xFF9CA3AF),
                     fontWeight: FontWeight.w500,

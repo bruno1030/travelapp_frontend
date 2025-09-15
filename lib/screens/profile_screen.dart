@@ -5,6 +5,7 @@ import 'login_screen.dart';
 import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/controllers/locale_controller.dart';
+import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -84,11 +85,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return const LoginScreen();
     }
 
+    String profileString = AppLocalizations.of(context)?.profile ?? 'Profile';
+    String userInfoString = AppLocalizations.of(context)?.user_info ?? 'User info';
+    String nameString = AppLocalizations.of(context)?.name ?? 'Name';
+    String usernameString = AppLocalizations.of(context)?.username ?? 'Username';
+    String emailString = AppLocalizations.of(context)?.email ?? 'Email';
+    String logoutString = AppLocalizations.of(context)?.logout ?? 'Logout';
+    String saveString = AppLocalizations.of(context)?.save ?? 'Save';
+    String cancelString = AppLocalizations.of(context)?.cancel ?? 'Cancel';
+
     return Scaffold(
       appBar: CustomAppBar(
         city: null,
         locale: locale,
-        title: "Profile",
+        title: profileString,
       ),
       bottomNavigationBar: const CustomBottomBar(),
       body: _isLoading
@@ -115,8 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    "User Info",
+                                  Text(
+                                    userInfoString,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,
@@ -141,9 +151,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               TextField(
                                 controller: _nameController,
                                 enabled: _isEditing,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  labelText: "Name",
+                                  labelText: nameString,
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
                                   labelStyle: const TextStyle(color: Colors.white70),
                                   filled: true,
@@ -157,9 +167,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               TextField(
                                 controller: _usernameController,
                                 enabled: _isEditing,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  labelText: "Username",
+                                  labelText: usernameString,
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
                                   labelStyle: const TextStyle(color: Colors.white70),
                                   filled: true,
@@ -173,9 +183,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               TextField(
                                 controller: _emailController,
                                 enabled: false,
-                                style: const TextStyle(color: Colors.white70),
+                                style: TextStyle(color: Colors.white70),
                                 decoration: InputDecoration(
-                                  labelText: "Email",
+                                  labelText: emailString,
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
                                   labelStyle: const TextStyle(color: Colors.white70),
                                   filled: true,
@@ -199,8 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 TextButton(
                                   onPressed: _cancelEditing,
-                                  child: const Text(
-                                    "Cancel",
+                                  child: Text(
+                                    cancelString,
                                     style: TextStyle(color: Colors.white70),
                                   ),
                                 ),
@@ -215,8 +225,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                   onPressed: _saveEditing,
-                                  child: const Text(
-                                    'Save',
+                                  child: Text(
+                                    saveString,
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.white),
                                   ),
@@ -240,8 +250,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       await auth.signOut();
                     },
-                    child: const Text(
-                      'Logout',
+                    child: Text(
+                      logoutString,
                       style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                   ),

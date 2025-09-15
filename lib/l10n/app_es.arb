@@ -18,12 +18,20 @@
   "or": "o",
   "email": "Correo electrónico",
   "create_account": "Crear cuenta",
-  "password": "Contraseña",
-  "confirm_your_password": "Confirma tu contraseña",
+  "password_as_required": "Contraseña *",
+  "confirm_your_password_as_required": "Confirma tu contraseña *",
   "name_optional": "Nombre (opcional)",
   "username_optional": "Nombre de usuario (opcional)",
   "name": "Nombre",
   "username": "Nombre de usuario",
   "mandatory_fields": "* Campos obligatorios",
-  "forgot_your_password": "¿Olvidaste tu contraseña?"
+  "forgot_your_password": "¿Olvidaste tu contraseña?",
+  "login_button": "Iniciar sesión",
+  "enter_password_prompt": "Por favor, ingresa tu contraseña",
+  "enter_password_label": "Ingrese su contraseña",
+  "password_label": "Contraseña",
+  "user_info": "Información del usuario",
+  "logout": "Cerrar sesión",
+  "save": "Guardar",
+  "cancel": "Cancelar"
 }

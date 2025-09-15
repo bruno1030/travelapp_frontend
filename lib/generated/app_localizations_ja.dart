@@ -66,10 +66,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get create_account => 'アカウント作成';
 
   @override
-  String get password => 'パスワード';
+  String get password_as_required => 'パスワード *';
 
   @override
-  String get confirm_your_password => 'パスワードを確認';
+  String get confirm_your_password_as_required => 'パスワードを確認 *';
 
   @override
   String get name_optional => '名前（任意）';
@@ -88,4 +88,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get forgot_your_password => 'パスワードをお忘れですか？';
+
+  @override
+  String get login_button => 'ログイン';
+
+  @override
+  String get enter_password_prompt => 'パスワードを入力してください';
+
+  @override
+  String get enter_password_label => 'パスワードを入力';
+
+  @override
+  String get password_label => 'パスワード';
+
+  @override
+  String get user_info => 'ユーザー情報';
+
+  @override
+  String get logout => 'ログアウト';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get cancel => 'キャンセル';
 }

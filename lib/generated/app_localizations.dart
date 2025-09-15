@@ -222,17 +222,17 @@ abstract class AppLocalizations {
   /// **'Create account'**
   String get create_account;
 
-  /// No description provided for @password.
+  /// No description provided for @password_as_required.
   ///
   /// In en, this message translates to:
-  /// **'Password'**
-  String get password;
+  /// **'Password *'**
+  String get password_as_required;
 
-  /// No description provided for @confirm_your_password.
+  /// No description provided for @confirm_your_password_as_required.
   ///
   /// In en, this message translates to:
-  /// **'Confirm your password'**
-  String get confirm_your_password;
+  /// **'Confirm your password *'**
+  String get confirm_your_password_as_required;
 
   /// No description provided for @name_optional.
   ///
@@ -269,6 +269,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forgot your password?'**
   String get forgot_your_password;
+
+  /// No description provided for @login_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get login_button;
+
+  /// No description provided for @enter_password_prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get enter_password_prompt;
+
+  /// No description provided for @enter_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enter_password_label;
+
+  /// No description provided for @password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password_label;
+
+  /// No description provided for @user_info.
+  ///
+  /// In en, this message translates to:
+  /// **'User info'**
+  String get user_info;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
 }
 
 class _AppLocalizationsDelegate
