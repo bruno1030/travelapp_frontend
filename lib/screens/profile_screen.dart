@@ -6,6 +6,7 @@ import 'package:travelapp_frontend/widgets/custom_app_bar.dart';
 import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/controllers/locale_controller.dart';
 import 'package:travelapp_frontend/generated/app_localizations.dart';
+import 'package:travelapp_frontend/services/api_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -63,18 +64,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _saveEditing() {
+  void _saveEditing() async {
+    final auth = Provider.of<AuthController>(context, listen: false);
+
+    final newName = _nameController.text.trim();
+    final newUsername = _usernameController.text.trim();
+
     setState(() {
       _isEditing = false;
-      _originalName = _nameController.text;
-      _originalUsername = _usernameController.text;
+      _originalName = newName;
+      _originalUsername = newUsername;
+      _isLoading = true;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Changes saved (mock only)"),
-      ),
-    );
+
+    try {
+      await ApiService.updateUserProfile(
+        firebaseUid: auth.currentUser!.uid,
+        name: newName,
+        username: newUsername,
+      );
+
+      // Atualiza localmente os dados no AuthController
+      auth.backendName = newName;
+      auth.backendUsername = newUsername;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Profile updated successfully")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao atualizar perfil: $e")),
+      );
+
+      // Restaura valores originais em caso de erro
+      setState(() {
+        _nameController.text = _originalName;
+        _usernameController.text = _originalUsername;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
