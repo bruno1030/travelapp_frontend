@@ -8,7 +8,9 @@ import 'dart:io';
 import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? redirectTo; // 👈 adicionado
+
+  const LoginScreen({super.key, this.redirectTo});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -26,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _continueWithEmail(AuthController auth) async {
     final email = emailController.text.trim();
-    
+
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, digite seu email')),
@@ -49,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       // Chama método que verificará se email existe via endpoint
       final userExists = await auth.checkUserByEmail(email);
-      
+
       setState(() {
         _loading = false;
       });
@@ -59,17 +61,27 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PasswordLoginScreen(email: email),
+            builder: (context) => PasswordLoginScreen(
+              email: email,
+              redirectTo: widget.redirectTo,
+            ),
           ),
-        );
+        ).then((result) {
+          if (result != null) Navigator.of(context).pop(result);
+        });
       } else {
         // Email não existe → vai para tela de criação de conta
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreateAccountScreen(email: email),
+            builder: (context) => CreateAccountScreen(
+              email: email,
+              redirectTo: widget.redirectTo, // 👈 repassa
+            ),
           ),
-        );
+        ).then((result) {
+          if (result != null) Navigator.of(context).pop(result);
+        });
       }
     } catch (e) {
       setState(() {
@@ -97,8 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
           const SnackBar(content: Text('Login com Google realizado com sucesso!')),
         );
         debugPrint('Firebase ID Token: $token');
-        // Aqui você pode navegar para a home ou fazer outras ações
-        Navigator.of(context).pop(); // Volta para tela anterior
+
+        // ✅ Após login bem sucedido, retorna redirectTo
+        Navigator.of(context).pop(widget.redirectTo);
       }
     } catch (e) {
       setState(() {
@@ -149,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32),
               Text(
                 welcome,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFFF9FAFB),
@@ -157,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
-              
+
               // Botão Google - só aparece no Android e Web
               if (_shouldShowGoogleButton) ...[
                 ElevatedButton.icon(
@@ -180,31 +193,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Divisor "ou" - só aparece quando tem botão Google
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Divider(color: Color(0xFF27272A)),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
                         or,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF9CA3AF),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Divider(color: Color(0xFF27272A)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 32),
               ],
-              
+
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -248,8 +261,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(continueString),
-                          SizedBox(width: 8),
-                          Icon(Icons.arrow_forward),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward),
                         ],
                       ),
               ),

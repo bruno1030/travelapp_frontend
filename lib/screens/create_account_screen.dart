@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
+import 'profile_screen.dart';
 import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   final String email;
-  
-  const CreateAccountScreen({super.key, required this.email});
+  final String? redirectTo; // 👈 novo parâmetro
+
+  const CreateAccountScreen({
+    super.key,
+    required this.email,
+    this.redirectTo,
+  });
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
@@ -88,14 +94,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       _loading = false;
     });
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result ?? 'Conta criada com sucesso!')),
-      );
+    if (!mounted) return;
 
-      // Se a conta foi criada com sucesso, voltar para login
-      if (result != null && result.contains('Conta criada')) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(result ?? 'Conta criada com sucesso!')),
+    );
+
+    // Se a conta foi criada com sucesso, loga automaticamente
+    if (result != null && result.contains('Conta criada')) {
+      await auth.signInWithEmail(widget.email, passwordController.text.trim());
+
+      // Redirecionamento baseado no parâmetro
+      if (widget.redirectTo == 'post_photo') {
+        Navigator.of(context).pop('post_photo'); // volta para CustomBottomBar
+      } else {
+        // Por padrão ou se redirectTo == 'profile'
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        );
       }
     }
   }
@@ -148,7 +165,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 40),
               
-              // Campo email (bloqueado)
               TextField(
                 controller: TextEditingController(text: widget.email),
                 enabled: false,
@@ -177,7 +193,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Campo senha
               TextField(
                 controller: passwordController,
                 obscureText: _obscurePassword,
@@ -217,7 +232,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Campo confirmar senha
               TextField(
                 controller: confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
@@ -257,7 +271,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Campo nome (opcional)
               TextField(
                 controller: nameController,
                 style: TextStyle(color: Color(0xFFF9FAFB)),
@@ -285,7 +298,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Campo username (opcional)
               TextField(
                 controller: usernameController,
                 style: TextStyle(color: Color(0xFFF9FAFB)),
@@ -313,7 +325,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Texto de campos obrigatórios - MOVIDO PARA ANTES DO BOTÃO
               Text(
                 mandatoryFieldsString,
                 style: TextStyle(
@@ -324,7 +335,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Botão criar conta
               ElevatedButton(
                 onPressed: _loading ? null : () => _createAccount(auth),
                 style: ElevatedButton.styleFrom(

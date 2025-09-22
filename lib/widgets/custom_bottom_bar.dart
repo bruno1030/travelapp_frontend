@@ -10,6 +10,7 @@ import 'package:travelapp_frontend/controllers/locale_controller.dart';
 import 'package:travelapp_frontend/controllers/auth_controller.dart';
 import 'package:travelapp_frontend/screens/home_screen.dart';
 import 'package:travelapp_frontend/screens/profile_screen.dart';
+import 'package:travelapp_frontend/screens/login_screen.dart';
 import 'package:travelapp_frontend/services/api_service.dart';
 import 'package:travelapp_frontend/generated/app_localizations.dart';
 
@@ -19,7 +20,6 @@ class CustomBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeController = Provider.of<LocaleController>(context);
-    final auth = Provider.of<AuthController>(context);
 
     String homeString = AppLocalizations.of(context)?.home ?? 'Home';
     String postPhotoString = AppLocalizations.of(context)?.post_photo ?? 'Post Photo';
@@ -53,11 +53,8 @@ class CustomBottomBar extends StatelessWidget {
             _BottomBarItem(
               icon: Icons.person,
               label: profileString,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                );
+              onTap: () async {
+                await _handleProfile(context);
               },
             ),
           ],
@@ -66,7 +63,51 @@ class CustomBottomBar extends StatelessWidget {
     );
   }
 
+  /// Caso clique em Post Photo
   Future<void> _handleUploadPhoto(BuildContext context) async {
+    final auth = Provider.of<AuthController>(context, listen: false);
+
+    if (!auth.isLoggedIn) {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(redirectTo: 'post_photo'),
+        ),
+      );
+
+      if (result == 'post_photo') {
+        await _takeAndUploadPhoto(context);
+      }
+      return;
+    }
+
+    await _takeAndUploadPhoto(context);
+  }
+
+  /// Caso clique em Profile
+  Future<void> _handleProfile(BuildContext context) async {
+    final auth = Provider.of<AuthController>(context, listen: false);
+
+    if (!auth.isLoggedIn) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(redirectTo: 'profile'),
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+    );
+  }
+
+  /// Função que realmente tira e envia a foto
+  Future<void> _takeAndUploadPhoto(BuildContext context) async {
+    final auth = Provider.of<AuthController>(context, listen: false);
+
     // Verifica se o serviço de localização está habilitado
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -109,7 +150,8 @@ class CustomBottomBar extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Photo captured at Lat: ${position.latitude}, Lon: ${position.longitude}'),
+          'Photo captured at Lat: ${position.latitude}, Lon: ${position.longitude}',
+        ),
       ),
     );
 
@@ -125,6 +167,7 @@ class CustomBottomBar extends StatelessWidget {
           imageBytes: imageBytes,
           latitude: position.latitude,
           longitude: position.longitude,
+          userId: auth.backendUserId!,
         );
       } else {
         File file = File(imageFile.path);
@@ -132,6 +175,7 @@ class CustomBottomBar extends StatelessWidget {
           imageFile: file,
           latitude: position.latitude,
           longitude: position.longitude,
+          userId: auth.backendUserId!,
         );
       }
     } catch (e) {
