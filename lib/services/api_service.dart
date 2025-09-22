@@ -32,17 +32,16 @@ class ApiService {
     }
   }
 
-  /// Salvar foto no backend e no Cloudinary (Web e Mobile)
   static Future<void> savePhoto({
     File? imageFile,
-    Uint8List? imageBytes, // usado para Web
+    Uint8List? imageBytes,
     required double latitude,
     required double longitude,
+    required int userId,
   }) async {
     try {
       debugPrint('Iniciando savePhoto...');
 
-      // Obter assinatura do backend
       final signResponse = await http.post(
         Uri.parse('$baseUrl/cloudinary/signature'),
       );
@@ -58,16 +57,14 @@ class ApiService {
 
       debugPrint('Assinatura obtida: timestamp=$timestamp, signature=$signature, api_key=$api_key');
 
-      // Upload no Cloudinary
       const String cloudName = 'travelappprd';
-      const String uploadFolder = 'travelapp'; // se necessário
+      const String uploadFolder = 'travelapp';
 
       var uploadRequest = http.MultipartRequest(
         "POST",
         Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload"),
       );
 
-      // Nome de arquivo temporário com timestamp
       String fileName = 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       if (kIsWeb && imageBytes != null) {
@@ -100,7 +97,6 @@ class ApiService {
 
       debugPrint('Upload Cloudinary concluído: $secureUrl');
 
-      // Registrar foto no backend
       final registerResponse = await http.post(
         Uri.parse('$baseUrl/photos'),
         headers: {'Content-Type': 'application/json'},
@@ -108,7 +104,7 @@ class ApiService {
           "image_url": secureUrl,
           "latitude": latitude,
           "longitude": longitude,
-          "user_id": 3
+          "user_id": userId, // 👈 agora usa o id do AuthController
         }),
       );
 

@@ -12,6 +12,7 @@ class AuthController with ChangeNotifier {
 
   String? backendName;
   String? backendUsername;
+  int? backendUserId; // 👈 novo campo
 
   bool get isLoggedIn => currentUser != null;
 
@@ -23,32 +24,24 @@ class AuthController with ChangeNotifier {
     });
   }
 
-  // Verifica se email existe no backend
   Future<bool> checkUserByEmail(String email) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/users/check-email?email=$email'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       debugPrint('checkUserByEmail response: ${response.statusCode} ${response.body}');
 
-      if (response.statusCode == 200) {
-        return true;
-      } else if (response.statusCode == 404) {
-        return false;
-      } else {
-        throw Exception('Erro ao verificar email: ${response.statusCode}');
-      }
+      if (response.statusCode == 200) return true;
+      if (response.statusCode == 404) return false;
+      throw Exception('Erro ao verificar email: ${response.statusCode}');
     } catch (e) {
       debugPrint('Erro ao verificar email: $e');
       rethrow;
     }
   }
 
-  // Login/Cadastro com Google
   Future<String?> signInWithGoogle() async {
     try {
       final token = await GoogleSignInService.signInWithGoogle(_auth);
@@ -57,16 +50,10 @@ class AuthController with ChangeNotifier {
         currentUser = _auth.currentUser;
         debugPrint('Google sign-in successful. UID: ${currentUser?.uid}, ID Token: $token');
 
-        // Verifica se é um usuário novo no backend
         final isNewUser = await _checkIfUserIsNew();
         debugPrint('Is new user in backend? $isNewUser');
 
-        if (isNewUser) {
-          await _handleNewGoogleUser();
-          debugPrint('Novo usuário cadastrado via Google');
-        } else {
-          debugPrint('Login existente via Google');
-        }
+        if (isNewUser) await _handleNewGoogleUser();
 
         notifyListeners();
       }
@@ -84,7 +71,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Verifica se usuário é novo no backend
   Future<bool> _checkIfUserIsNew() async {
     if (currentUser?.email == null) return false;
 
@@ -98,7 +84,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Trata usuário novo que se cadastrou via Google
   Future<void> _handleNewGoogleUser() async {
     if (currentUser == null) return;
 
@@ -115,7 +100,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Login com email e senha
   Future<String?> signInWithEmail(String email, String password) async {
     try {
       UserCredential cred =
@@ -143,7 +127,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Registro com email e dados adicionais
   Future<String?> registerWithEmailAndData({
     required String email,
     required String password,
@@ -182,7 +165,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Salvar dados do usuário no backend
   Future<void> _saveUserDataToBackend({
     required String email,
     required String provider,
@@ -191,6 +173,7 @@ class AuthController with ChangeNotifier {
   }) async {
     try {
       final idToken = await _auth.currentUser?.getIdToken();
+
       debugPrint('Saving user data to backend. UID: ${currentUser?.uid}, ID Token: $idToken');
 
       final Map<String, dynamic> body = {
@@ -219,7 +202,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Recuperar senha
   Future<String?> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -233,25 +215,22 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  // Logout
   Future<void> signOut() async {
     await GoogleSignInService.signOut();
     await _auth.signOut();
     debugPrint('User signed out. UID before clearing: ${currentUser?.uid}');
     currentUser = null;
+    backendUserId = null; // 👈 limpa id
+    backendName = null;
+    backendUsername = null;
     notifyListeners();
   }
 
-  // Obtém o usuário atual do backend usando idToken
   Future<Map<String, dynamic>?> getCurrentUserFromBackend() async {
     try {
       final idToken = await _auth.currentUser?.getIdToken();
-      debugPrint('Getting current user from backend. UID: ${currentUser?.uid}, ID Token: $idToken');
 
-      if (idToken == null) {
-        debugPrint('No ID Token available.');
-        return null;
-      }
+      if (idToken == null) return null;
 
       final response = await http.get(
         Uri.parse('$baseUrl/users/current'),
@@ -261,11 +240,8 @@ class AuthController with ChangeNotifier {
         },
       );
 
-      debugPrint('Backend /users/current response: ${response.statusCode} ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        debugPrint('Current user data: $data');
         return data;
       } else {
         debugPrint('Failed to fetch current user. Status: ${response.statusCode}');
@@ -277,15 +253,14 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  /// Novo método: busca do backend e atualiza os campos name e username
   Future<void> fetchAndSetUserData() async {
     final data = await getCurrentUserFromBackend();
     if (data != null) {
       backendName = data['name'] as String?;
       backendUsername = data['username'] as String?;
-      debugPrint('Fetched user data: name=$backendName, username=$backendUsername');
+      backendUserId = data['id'] as int?; // 👈 salva o id do backend
+      debugPrint('Fetched user data: id=$backendUserId, name=$backendName, username=$backendUsername');
       notifyListeners();
     }
   }
-
 }

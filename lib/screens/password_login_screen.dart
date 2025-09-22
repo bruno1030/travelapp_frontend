@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import 'profile_screen.dart';
+import 'package:travelapp_frontend/widgets/custom_bottom_bar.dart';
 import 'package:travelapp_frontend/generated/app_localizations.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String email;
+  final String? redirectTo; // 👈 novo parâmetro
 
-  const PasswordLoginScreen({super.key, required this.email});
+  const PasswordLoginScreen({super.key, required this.email, this.redirectTo});
 
   @override
   State<PasswordLoginScreen> createState() => _PasswordLoginScreenState();
@@ -47,20 +49,20 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
     });
 
     if (result != null && result.startsWith('ey')) {
-      // Token JWT válido retornado
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login realizado com sucesso!')),
       );
 
-      // Redireciona para ProfileScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ProfileScreen(),
-        ),
-      );
+      // Redirecionamento baseado em redirectTo
+      if (widget.redirectTo == 'post_photo') {
+        Navigator.of(context).pop('post_photo'); // retorna para CustomBottomBar
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      }
     } else {
-      // Token é mensagem de erro
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result ?? 'Erro desconhecido')),
       );
@@ -184,8 +186,8 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(loginButton),
-                          SizedBox(width: 8),
-                          Icon(Icons.arrow_forward),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward),
                         ],
                       ),
               ),
@@ -194,7 +196,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                 onPressed: _loading ? null : () => _forgotPassword(auth),
                 child: Text(
                   forgotYourPasswordString,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF9CA3AF),
                     fontWeight: FontWeight.w500,
                   ),
