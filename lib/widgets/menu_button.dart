@@ -118,21 +118,21 @@ class MenuButton extends StatelessWidget {
   String _getFlagForLocale(Locale locale) {
     switch (locale.languageCode) {
       case 'en':
-        return 'us_uk.jpeg';
+        return 'us_uk.png';
       case 'pt':
         return 'br_pt.png';
       case 'ja':
         return 'japan.png';
       case 'zh':
-        return 'china.jpeg';
+        return 'china.png';
       case 'de':
-        return 'germany.jpeg';
+        return 'germany.png';
       case 'es':
-        return 'spain.jpeg';
+        return 'spain.png';
       case 'fr':
-        return 'france.jpeg';
+        return 'france.png';
       default:
-        return 'us_uk.jpeg';
+        return 'us_uk.png';
     }
   }
 

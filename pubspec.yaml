@@ -94,12 +94,12 @@ flutter:
   assets:
   - assets/logo_FE1F80.png
   - assets/flags/br_pt.png
-  - assets/flags/china.jpeg
+  - assets/flags/china.png
   - assets/flags/japan.png
-  - assets/flags/us_uk.jpeg
-  - assets/flags/germany.jpeg
-  - assets/flags/france.jpeg
-  - assets/flags/spain.jpeg
+  - assets/flags/us_uk.png
+  - assets/flags/germany.png
+  - assets/flags/france.png
+  - assets/flags/spain.png
 
   generate: true
 
