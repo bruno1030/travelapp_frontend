@@ -55,8 +55,6 @@ class ApiService {
       final String signature = signData['signature'];
       final String api_key = signData['api_key'];
 
-      debugPrint('Assinatura obtida: timestamp=$timestamp, signature=$signature, api_key=$api_key');
-
       const String cloudName = 'travelappprd';
       const String uploadFolder = 'travelapp';
 
@@ -104,7 +102,7 @@ class ApiService {
           "image_url": secureUrl,
           "latitude": latitude,
           "longitude": longitude,
-          "user_id": userId, // 👈 agora usa o id do AuthController
+          "user_id": userId,
         }),
       );
 
@@ -116,6 +114,34 @@ class ApiService {
     } catch (e, st) {
       debugPrint('Erro em savePhoto: $e');
       debugPrintStack(stackTrace: st);
+    }
+  }
+
+  /// ----------------------------
+  /// Novo método: atualizar usuário
+  /// ----------------------------
+  static Future<void> updateUserProfile({
+    required String firebaseUid,
+    String? username,
+    String? name,
+  }) async {
+    final url = Uri.parse('$baseUrl/users/update');
+
+    final body = <String, dynamic>{};
+    if (username != null) body['username'] = username;
+    if (name != null) body['name'] = name;
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'firebase-uid': firebaseUid, // 👈 envia UID no header
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao atualizar usuário: ${response.body}');
     }
   }
 }
